@@ -36,7 +36,6 @@ const SearchWindow: React.FC<SearchWindowProps> = ({ setIsSearchOpened }) => {
 
   const fetchSongs = async () => {
     try {
-      console.log(searchedPages, page);
       if (searchedPages.includes(page)) return;
       const res = await axios.get(
         `/songs/search?query=${searchValue}&page=${page}`
