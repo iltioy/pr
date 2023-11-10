@@ -7,6 +7,7 @@ import SettingsDrawer from "../../../components/SettingsDrawer";
 import PlaylistCarousel from "../../../components/playlist/PlaylistCarousel";
 import { playlists } from "../../../faker";
 import PlaylistCarouselSection from "../../../components/playlist/PlaylistCarouselSection";
+import { getSongFromRadio } from "../../../queries/songs";
 
 const Radio = () => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
@@ -51,6 +52,9 @@ const Radio = () => {
                                             transform: "scale(1.1)",
                                         },
                                         marginBottom: "15px",
+                                    }}
+                                    onClick={() => {
+                                        getSongFromRadio();
                                     }}
                                 >
                                     <PlayArrowIcon
