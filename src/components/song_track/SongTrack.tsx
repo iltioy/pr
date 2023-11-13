@@ -10,7 +10,7 @@ import PauseIcon from "@mui/icons-material/Pause";
 import SongProgress from "./SongProgress";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
-import { toggleLikeSong } from "../../queries/songs";
+import { getSongFromRadio, toggleLikeSong } from "../../queries/songs";
 // import useSound from "use-sound";
 
 const audio = new Audio();
@@ -78,7 +78,11 @@ const SongTrack = observer(() => {
         };
 
         audio.onended = () => {
-            songsStore.setCurrentSongToNextInQueue();
+            if (songsStore.radio) {
+                getSongFromRadio();
+            } else {
+                songsStore.setCurrentSongToNextInQueue();
+            }
         };
     }, [isAudioPlaying, audio]);
 

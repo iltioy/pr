@@ -8,6 +8,8 @@ class SongsStore {
     current_song?: SongType;
     songs_queue: SongType[] = [];
 
+    radio: boolean = false;
+
     constructor() {
         makeAutoObservable(this);
     }
@@ -31,7 +33,9 @@ class SongsStore {
         this.liked_songs_ids = newUserLikedSongIds;
     }
 
-    setCurrentSong(song: SongType) {
+    setCurrentSong(song: SongType, radio: boolean) {
+        this.radio = radio;
+
         if (this.current_song) {
             if (this.current_song.id === song.id) return;
         }
@@ -89,7 +93,7 @@ class SongsStore {
         this.songs_queue = array;
 
         if (this.songs_queue.length > 0) {
-            this.setCurrentSong(this.songs_queue[0]);
+            this.setCurrentSong(this.songs_queue[0], false);
         }
     }
 }

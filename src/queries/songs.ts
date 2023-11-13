@@ -83,17 +83,17 @@ export const uploadSong = async (uploadInfo: UploadSongData, fileInfo?: FileInfo
 
 export const getSongFromRadio = async () => {
     try {
-        let moodCorreleation = {
+        let moodCorreleation: Record<string, number> = {
             calm: 0,
             cheerful: 0,
             sad: 0,
         };
-        let genreCorrelation = {
+        let genreCorrelation: Record<string, number> = {
             hipHop: 0,
             pop: 0,
             rap: 0,
         };
-        let languageCorrelation = {
+        let languageCorrelation: Record<string, number> = {
             russian: 0,
             english: 0,
             nowords: 0,
@@ -116,38 +116,33 @@ export const getSongFromRadio = async () => {
             });
         });
 
-        const moodKeys = getTwoKeysWithHighestValues(moodCorreleation);
-        console.log(moodKeys, moodCorreleation);
-        return;
+        const moodKeys = findTwoKeysWithHighestValues(moodCorreleation);
+        const genreKeys = findTwoKeysWithHighestValues(genreCorrelation);
+        const lanuageKeys = findTwoKeysWithHighestValues(languageCorrelation);
 
-        const res = await axios.post("/songs/get/radio", {});
-    } catch (error) {}
+        console.log(moodKeys, genreKeys, lanuageKeys);
+
+        const res = await axios.post("/songs/get/radio", {
+            genres: genreKeys,
+            moods: moodKeys,
+            languages: lanuageKeys,
+        });
+
+        const song: SongType = res.data;
+
+        songsStore.setCurrentSong(song, true);
+    } catch (error) {
+        console.log(error);
+    }
 };
 
-const getTwoKeysWithHighestValues = (obj: any) => {
-    const keys = Object.keys(obj);
+function findTwoKeysWithHighestValues(obj: Record<string, number>): string[] {
+    // Get an array of entries from the object
+    const entries: [string, number][] = Object.entries(obj);
 
-    // Use the keys to get an array of values
-    const values = keys.map((key) => obj[key]);
+    // Sort the entries based on values in descending order
+    entries.sort((a, b) => b[1] - a[1]);
 
-    // Find the indices of the two highest values
-    const highestIndices = values.reduce(
-        (indices, value, index, arr) => {
-            if (value > arr[indices[0]]) {
-                indices[1] = indices[0];
-                indices[0] = index;
-            } else if (value > arr[indices[1]]) {
-                indices[1] = index;
-            }
-            return indices;
-        },
-        [-1, -1]
-    );
-
-    console.log("high", highestIndices);
-
-    // Use the indices to get the keys with the highest values
-    const highestKeys = highestIndices.map((index: any) => keys[index]);
-
-    return highestKeys;
-};
+    // Return an array containing the two keys with the highest values
+    return [entries[0][0], entries[1][0]];
+}
