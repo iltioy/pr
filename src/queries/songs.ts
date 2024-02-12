@@ -1,8 +1,8 @@
 import userStore from "../stores/user-store";
-import songsStore from "../stores/songs-store";
 import axios from "axios";
 import { FileInfo } from "../components/modals/SongUploadModal/SongUploadModal";
 import { SongType } from "../types";
+import songsStore from "../stores/songs-store";
 import playlistsStore from "../stores/playlists-store";
 
 export interface UploadSongData {
@@ -84,10 +84,15 @@ class SongsQueries {
 
     getSongFromRadio = async () => {
         try {
+            const { languages, moods } = songsStore.song_preferences;
+
             let moodCorreleation: Record<string, number> = {
-                calm: 0,
-                cheerful: 0,
-                sad: 0,
+                calm: moods.includes("Спокойное") ? 1 : 0,
+                cheerful:
+                    moods.includes("Бодрое") || moods.includes("Весёлое")
+                        ? 1
+                        : 0,
+                sad: moods.includes("Грустное") ? 1 : 0,
             };
             let genreCorrelation: Record<string, number> = {
                 hipHop: 0,
@@ -95,15 +100,15 @@ class SongsQueries {
                 rap: 0,
             };
             let languageCorrelation: Record<string, number> = {
-                russian: 0,
-                english: 0,
-                nowords: 0,
+                russian: languages.includes("Русский") ? 1 : 0,
+                english: languages.includes("Иностранный") ? 1 : 0,
+                nowords: languages.includes("Без слов") ? 1 : 0,
             };
 
             playlistsStore.added_playlists.map((playlist) => {
                 playlist.songs.map((songInstance) => {
                     const { song } = songInstance;
-                    if (song.mood) {
+                    if (song.mood && moods.length === 0) {
                         moodCorreleation[song.mood] += 1;
                     }
 
@@ -111,11 +116,13 @@ class SongsQueries {
                         genreCorrelation[song.genre] += 1;
                     }
 
-                    if (song.language) {
+                    if (song.language && languages.length === 0) {
                         languageCorrelation[song.language] += 1;
                     }
                 });
             });
+
+            console.log(moodCorreleation, languageCorrelation);
 
             const moodKeys =
                 this.findTwoKeysWithHighestValues(moodCorreleation);

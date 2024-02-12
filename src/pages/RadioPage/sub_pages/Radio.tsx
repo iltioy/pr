@@ -1,15 +1,14 @@
-import { Stack, Typography, Drawer } from "@mui/material";
-import PlaylistsSection from "../../../components/playlist/PlaylistsSection";
+import { Stack, Typography } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 import SettingsDrawer from "../../../components/SettingsDrawer";
-import PlaylistCarousel from "../../../components/playlist/PlaylistCarousel";
 import { playlists } from "../../../faker";
 import PlaylistCarouselSection from "../../../components/playlist/PlaylistCarouselSection";
 import SongQueries from "../../../queries/songs";
+import { observer } from "mobx-react-lite";
 
-const Radio = () => {
+const Radio = observer(() => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
 
     return (
@@ -82,6 +81,9 @@ const Radio = () => {
                                             border: "1px solid #737373",
                                         },
                                     }}
+                                    onClick={() => {
+                                        setIsSettingsDrawerOpen(true);
+                                    }}
                                 >
                                     <ExpandMoreIcon
                                         sx={{
@@ -92,9 +94,6 @@ const Radio = () => {
                                     <Typography
                                         sx={{
                                             paddingRight: "4px",
-                                        }}
-                                        onClick={() => {
-                                            setIsSettingsDrawerOpen(true);
                                         }}
                                     >
                                         Настроить
@@ -112,6 +111,6 @@ const Radio = () => {
             </Stack>
         </>
     );
-};
+});
 
 export default Radio;

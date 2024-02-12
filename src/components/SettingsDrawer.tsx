@@ -1,5 +1,8 @@
 import { Drawer, Grid, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { observer } from "mobx-react-lite";
+import { useState } from "react";
+import songsStore from "../stores/songs-store";
 
 interface SettingsDrawerProps {
     isSettingsDrawerOpen: boolean;
@@ -8,132 +11,212 @@ interface SettingsDrawerProps {
 
 interface OptionsItemProps {
     title: string;
+    setValue: React.Dispatch<React.SetStateAction<string[]>>;
+    values: string[];
+    handleChanges: () => void;
 }
 
-const OptionsItem: React.FC<OptionsItemProps> = ({ title }) => {
-    const {
-        palette: { mode },
-    } = useTheme();
+const OptionsItem: React.FC<OptionsItemProps> = observer(
+    ({ title, setValue, values, handleChanges }) => {
+        const {
+            palette: { mode },
+        } = useTheme();
 
-    return (
-        <Stack
-            bgcolor="custom.bg.main"
-            p="10px"
-            borderRadius="10px"
-            justifyContent="center"
-            alignItems="center"
-            display="flex"
-            sx={{
-                cursor: "pointer",
-                ":hover": {
-                    background: `${mode === "dark" ? "#212121" : "#ececec"}`,
-                },
-            }}
-            className="noselect"
-        >
-            {title}
-        </Stack>
-    );
-};
+        const activeBgColor = mode === "dark" ? "#212121" : "#ececec";
 
-const SettingsDrawer: React.FC<SettingsDrawerProps> = ({
-    isSettingsDrawerOpen,
-    setIsSettingsDrawerOpen,
-}) => {
-    return (
-        <Drawer
-            anchor="right"
-            open={isSettingsDrawerOpen}
-            onClose={() => setIsSettingsDrawerOpen(false)}
-        >
+        return (
             <Stack
-                sx={{
-                    width: "500px",
-                    height: "100%",
-                }}
-                bgcolor="custom.bg.secondary"
+                bgcolor={`${
+                    values.includes(title) ? activeBgColor : "custom.bg.main"
+                }`}
+                p="10px"
+                borderRadius="10px"
+                justifyContent="center"
                 alignItems="center"
-                paddingTop="40px"
-                color="text.primary"
+                display="flex"
+                sx={{
+                    cursor: "pointer",
+                    ":hover": {
+                        background: `${activeBgColor}`,
+                    },
+                }}
+                className="noselect"
+                onClick={() => {
+                    if (values.includes(title)) {
+                        setValue((prevState) =>
+                            prevState.filter((el) => el !== title)
+                        );
+                    } else {
+                        setValue((prevState) => [...prevState, title]);
+                    }
+                    handleChanges();
+                }}
             >
-                <Stack width="450px" flexDirection="column">
-                    <Stack flexDirection="column" alignItems="center">
-                        <Stack
-                            width="100%"
-                            flexDirection="column"
-                            alignItems="center"
-                            marginBottom="30px"
-                        >
-                            <Typography marginBottom="15px">
-                                ПО ХАРАКТЕРУ
-                            </Typography>
+                {title}
+            </Stack>
+        );
+    }
+);
 
-                            <Grid container spacing={1} width="100%">
-                                <Grid item xs={12}>
-                                    <OptionsItem title="Любимое" />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <OptionsItem title="Незнакомое" />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <OptionsItem title="Популярное" />
-                                </Grid>
-                            </Grid>
-                        </Stack>
+const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
+    ({ isSettingsDrawerOpen, setIsSettingsDrawerOpen }) => {
+        const [moods, setMoods] = useState<string[]>([]);
+        const [languages, setLanguages] = useState<string[]>([]);
+        const [types, setTypes] = useState<string[]>([]);
 
-                        <Stack
-                            width="100%"
-                            flexDirection="column"
-                            alignItems="center"
-                            marginBottom="30px"
-                        >
-                            <Typography marginBottom="15px">
-                                ПОД НАСТРОЕНИЕ
-                            </Typography>
+        const handleChanges = () => {
+            songsStore.setSongPreferences({
+                languages,
+                moods,
+                types,
+            });
+        };
 
-                            <Grid container spacing={1} width="100%">
-                                <Grid item xs={6}>
-                                    <OptionsItem title="Бодрое" />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <OptionsItem title="Весёлое" />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <OptionsItem title="Спокойное" />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <OptionsItem title="Грустное" />
-                                </Grid>
-                            </Grid>
-                        </Stack>
+        return (
+            <Drawer
+                anchor="right"
+                open={isSettingsDrawerOpen}
+                onClose={() => setIsSettingsDrawerOpen(false)}
+            >
+                <Stack
+                    sx={{
+                        width: "500px",
+                        height: "100%",
+                    }}
+                    bgcolor="custom.bg.secondary"
+                    alignItems="center"
+                    paddingTop="40px"
+                    color="text.primary"
+                >
+                    <Stack width="450px" flexDirection="column">
+                        <Stack flexDirection="column" alignItems="center">
+                            <Stack
+                                width="100%"
+                                flexDirection="column"
+                                alignItems="center"
+                                marginBottom="30px"
+                            >
+                                <Typography marginBottom="15px">
+                                    ПО ХАРАКТЕРУ
+                                </Typography>
 
-                        <Stack
-                            width="100%"
-                            flexDirection="column"
-                            alignItems="center"
-                            marginBottom="30px"
-                        >
-                            <Typography marginBottom="15px">
-                                ПО ЯЗЫКУ
-                            </Typography>
+                                <Grid container spacing={1} width="100%">
+                                    <Grid item xs={12}>
+                                        <OptionsItem
+                                            title="Любимое"
+                                            setValue={setTypes}
+                                            values={types}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <OptionsItem
+                                            title="Незнакомое"
+                                            setValue={setTypes}
+                                            values={types}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <OptionsItem
+                                            title="Популярное"
+                                            setValue={setTypes}
+                                            values={types}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Stack>
 
-                            <Grid container spacing={1} width="100%">
-                                <Grid item xs={12}>
-                                    <OptionsItem title="Русский" />
+                            <Stack
+                                width="100%"
+                                flexDirection="column"
+                                alignItems="center"
+                                marginBottom="30px"
+                            >
+                                <Typography marginBottom="15px">
+                                    ПОД НАСТРОЕНИЕ
+                                </Typography>
+
+                                <Grid container spacing={1} width="100%">
+                                    <Grid item xs={6}>
+                                        <OptionsItem
+                                            title="Бодрое"
+                                            setValue={setMoods}
+                                            values={moods}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <OptionsItem
+                                            title="Весёлое"
+                                            setValue={setMoods}
+                                            values={moods}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <OptionsItem
+                                            title="Спокойное"
+                                            setValue={setMoods}
+                                            values={moods}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <OptionsItem
+                                            title="Грустное"
+                                            setValue={setMoods}
+                                            values={moods}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <OptionsItem title="Иностранный" />
+                            </Stack>
+
+                            <Stack
+                                width="100%"
+                                flexDirection="column"
+                                alignItems="center"
+                                marginBottom="30px"
+                            >
+                                <Typography marginBottom="15px">
+                                    ПО ЯЗЫКУ
+                                </Typography>
+
+                                <Grid container spacing={1} width="100%">
+                                    <Grid item xs={12}>
+                                        <OptionsItem
+                                            title="Русский"
+                                            setValue={setLanguages}
+                                            values={languages}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <OptionsItem
+                                            title="Иностранный"
+                                            setValue={setLanguages}
+                                            values={languages}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <OptionsItem
+                                            title="Без слов"
+                                            setValue={setLanguages}
+                                            values={languages}
+                                            handleChanges={handleChanges}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <OptionsItem title="Без слов" />
-                                </Grid>
-                            </Grid>
+                            </Stack>
                         </Stack>
                     </Stack>
                 </Stack>
-            </Stack>
-        </Drawer>
-    );
-};
+            </Drawer>
+        );
+    }
+);
 
 export default SettingsDrawer;

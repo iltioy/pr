@@ -1,6 +1,12 @@
 import { makeAutoObservable } from "mobx";
 import { OrderedSongType, PlaylistType, SongType } from "../types";
 
+interface SongPreferences {
+    moods: string[];
+    languages: string[];
+    types: string[];
+}
+
 class SongsStore {
     current_playlist_songs: SongType[] = [];
     liked_songs: SongType[] = [];
@@ -9,6 +15,7 @@ class SongsStore {
     current_song?: SongType;
     songs_queue: SongType[] = [];
 
+    song_preferences: SongPreferences = { moods: [], languages: [], types: [] };
     radio: boolean = false;
 
     constructor() {
@@ -129,6 +136,10 @@ class SongsStore {
         });
 
         return songs;
+    }
+
+    setSongPreferences(preferences: SongPreferences) {
+        this.song_preferences = preferences;
     }
 }
 
