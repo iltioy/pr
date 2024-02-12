@@ -8,58 +8,130 @@ import { PlaylistType } from "../../types";
 import { useNavigate, useParams } from "react-router";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
-import { toggleFavoritePlaylist } from "../../queries/playlists";
+import PlaylistQueries from "../../queries/playlists";
 
 interface PlaylistItemIconsProps {
     playlist: PlaylistType;
 }
 
-const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(({ playlist }) => {
-    const { ref: favIconRef, scale: favIconScale } = useHold({
-        size: 0.9,
-        initialScale: 1.15,
-    });
+const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(
+    ({ playlist }) => {
+        const { ref: favIconRef, scale: favIconScale } = useHold({
+            size: 0.9,
+            initialScale: 1.15,
+        });
 
-    const { ref: shareIconRef, scale: shareIconScale } = useHold({
-        size: 0.9,
-        initialScale: 1.15,
-    });
+        const { ref: shareIconRef, scale: shareIconScale } = useHold({
+            size: 0.9,
+            initialScale: 1.15,
+        });
 
-    const { playlistsStore, songsStore } = useStores();
-    const { username } = useParams();
+        const { playlistsStore, songsStore } = useStores();
+        const { username } = useParams();
 
-    const handleToggleFavoritePlaylist = () => {
-        toggleFavoritePlaylist(playlist.id, username);
-    };
+        const handleToggleFavoritePlaylist = () => {
+            PlaylistQueries.toggleFavoritePlaylist(playlist.id, username);
+        };
 
-    return (
-        <>
-            <Stack
-                width="100%"
-                justifyContent="center"
-                alignItems="center"
-                flexDirection="row"
-                gap="10px"
-            >
+        return (
+            <>
                 <Stack
-                    sx={{
-                        background: "black",
-                        opacity: 0.8,
-                        width: "42px",
-                        height: "42px",
-                        display: "flex",
-                        borderRadius: "50%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        transition: "0.3s",
-                        ":hover": {
-                            transform: `scale(${favIconScale})`,
-                        },
-                    }}
-                    ref={favIconRef}
+                    width="100%"
+                    justifyContent="center"
+                    alignItems="center"
+                    flexDirection="row"
+                    gap="10px"
                 >
-                    {playlistsStore.user_liked_playlists_ids?.includes(playlist.id) ? (
-                        <FavoriteIcon
+                    <Stack
+                        sx={{
+                            background: "black",
+                            opacity: 0.8,
+                            width: "42px",
+                            height: "42px",
+                            display: "flex",
+                            borderRadius: "50%",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            transition: "0.3s",
+                            ":hover": {
+                                transform: `scale(${favIconScale})`,
+                            },
+                        }}
+                        ref={favIconRef}
+                    >
+                        {playlistsStore.user_liked_playlists_ids?.includes(
+                            playlist.id
+                        ) ? (
+                            <FavoriteIcon
+                                htmlColor="white"
+                                sx={{
+                                    width: "25px",
+                                    height: "25px",
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleFavoritePlaylist();
+                                }}
+                            />
+                        ) : (
+                            <FavoriteBorderIcon
+                                htmlColor="white"
+                                sx={{
+                                    width: "25px",
+                                    height: "25px",
+                                }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleFavoritePlaylist();
+                                }}
+                            />
+                        )}
+                    </Stack>
+                    <Stack
+                        sx={{
+                            background: "orange",
+                            width: "55px",
+                            height: "55px",
+                            display: "flex",
+                            borderRadius: "50%",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            transition: "0.3s",
+                            ":hover": {
+                                transform: "scale(1.15)",
+                            },
+                        }}
+                    >
+                        <PlayArrowIcon
+                            sx={{
+                                width: "30px",
+                                height: "30px",
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                songsStore.setSongQueue(playlist);
+                                songsStore.shuffleSongQueue();
+                            }}
+                        />
+                    </Stack>
+                    <Stack
+                        sx={{
+                            background: "black",
+                            opacity: 0.8,
+                            width: "42px",
+                            height: "42px",
+                            display: "flex",
+                            borderRadius: "50%",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            transition: "0.3s",
+                            ":hover": {
+                                transform: `scale(${shareIconScale})`,
+                            },
+                        }}
+                        ref={shareIconRef}
+                    >
+                        <IosShareIcon
                             htmlColor="white"
                             sx={{
                                 width: "25px",
@@ -67,82 +139,14 @@ const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(({ playlist
                             }}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                handleToggleFavoritePlaylist();
                             }}
                         />
-                    ) : (
-                        <FavoriteBorderIcon
-                            htmlColor="white"
-                            sx={{
-                                width: "25px",
-                                height: "25px",
-                            }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleToggleFavoritePlaylist();
-                            }}
-                        />
-                    )}
+                    </Stack>
                 </Stack>
-                <Stack
-                    sx={{
-                        background: "orange",
-                        width: "55px",
-                        height: "55px",
-                        display: "flex",
-                        borderRadius: "50%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        transition: "0.3s",
-                        ":hover": {
-                            transform: "scale(1.15)",
-                        },
-                    }}
-                >
-                    <PlayArrowIcon
-                        sx={{
-                            width: "30px",
-                            height: "30px",
-                        }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            songsStore.setSongQueue(playlist);
-                            songsStore.shuffleSongQueue();
-                        }}
-                    />
-                </Stack>
-                <Stack
-                    sx={{
-                        background: "black",
-                        opacity: 0.8,
-                        width: "42px",
-                        height: "42px",
-                        display: "flex",
-                        borderRadius: "50%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        transition: "0.3s",
-                        ":hover": {
-                            transform: `scale(${shareIconScale})`,
-                        },
-                    }}
-                    ref={shareIconRef}
-                >
-                    <IosShareIcon
-                        htmlColor="white"
-                        sx={{
-                            width: "25px",
-                            height: "25px",
-                        }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                        }}
-                    />
-                </Stack>
-            </Stack>
-        </>
-    );
-});
+            </>
+        );
+    }
+);
 
 interface PlaylisyItemProps {
     playlist: PlaylistType;

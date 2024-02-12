@@ -3,6 +3,7 @@ import { OrderedSongType, PlaylistType, SongType } from "../types";
 
 class SongsStore {
     current_playlist_songs: SongType[] = [];
+    liked_songs: SongType[] = [];
     liked_songs_ids: number[] = [];
 
     current_song?: SongType;
@@ -16,11 +17,14 @@ class SongsStore {
 
     setLikedSongsIds(playlist: PlaylistType) {
         const ids: number[] = [];
+        const songs: SongType[] = [];
 
         playlist.songs.forEach((orderedSong: OrderedSongType) => {
             ids.push(orderedSong.song.id);
+            songs.push(orderedSong.song);
         });
 
+        this.liked_songs = songs;
         this.liked_songs_ids = ids;
     }
 
@@ -29,7 +33,9 @@ class SongsStore {
             this.liked_songs_ids.push(id);
             return;
         }
-        let newUserLikedSongIds = this.liked_songs_ids.filter((songId) => songId !== id);
+        let newUserLikedSongIds = this.liked_songs_ids.filter(
+            (songId) => songId !== id
+        );
         this.liked_songs_ids = newUserLikedSongIds;
     }
 
@@ -57,7 +63,8 @@ class SongsStore {
         });
 
         if (this.songs_queue.length > 0) {
-            let song = this.songs_queue[(indexOfSong + 1) % this.songs_queue.length];
+            let song =
+                this.songs_queue[(indexOfSong + 1) % this.songs_queue.length];
 
             this.current_song = song;
         }
@@ -87,7 +94,10 @@ class SongsStore {
             randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex--;
 
-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex],
+                array[currentIndex],
+            ];
         }
 
         this.songs_queue = array;
@@ -95,6 +105,30 @@ class SongsStore {
         if (this.songs_queue.length > 0) {
             this.setCurrentSong(this.songs_queue[0], false);
         }
+    }
+
+    searchSongs(query: string) {
+        const songs: SongType[] = [];
+        const songsIds: number[] = [];
+
+        this.liked_songs.forEach((song) => {
+            if (song.name.toLowerCase().includes(query.toLowerCase())) {
+                songs.push(song);
+                songsIds.push(song.id);
+            }
+        });
+
+        this.liked_songs.forEach((song) => {
+            if (
+                song.author.toLowerCase().includes(query.toLowerCase()) &&
+                !songsIds.includes(song.id)
+            ) {
+                songs.push(song);
+                songsIds.push(song.id);
+            }
+        });
+
+        return songs;
     }
 }
 

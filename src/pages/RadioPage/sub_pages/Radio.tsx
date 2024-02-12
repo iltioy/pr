@@ -7,7 +7,7 @@ import SettingsDrawer from "../../../components/SettingsDrawer";
 import PlaylistCarousel from "../../../components/playlist/PlaylistCarousel";
 import { playlists } from "../../../faker";
 import PlaylistCarouselSection from "../../../components/playlist/PlaylistCarouselSection";
-import { getSongFromRadio } from "../../../queries/songs";
+import SongQueries from "../../../queries/songs";
 
 const Radio = () => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
@@ -54,7 +54,7 @@ const Radio = () => {
                                         marginBottom: "15px",
                                     }}
                                     onClick={() => {
-                                        getSongFromRadio();
+                                        SongQueries.getSongFromRadio();
                                     }}
                                 >
                                     <PlayArrowIcon
@@ -63,7 +63,9 @@ const Radio = () => {
                                             marginRight: "5px",
                                         }}
                                     />
-                                    <Typography variant="h4">Моя волна</Typography>
+                                    <Typography variant="h4">
+                                        Моя волна
+                                    </Typography>
                                 </Stack>
 
                                 <Stack
@@ -102,7 +104,10 @@ const Radio = () => {
                         </Stack>
                     </Stack>
                     {/* <PlaylistsSection title="Поп" /> */}
-                    <PlaylistCarouselSection playlists={playlists} title="Новые" />
+                    <PlaylistCarouselSection
+                        playlists={playlists}
+                        title="Новые"
+                    />
                 </Stack>
             </Stack>
         </>
