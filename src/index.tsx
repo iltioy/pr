@@ -7,20 +7,23 @@ import { RootStoreContext } from "./root-store-context";
 import RootStore from "./stores/root-stote";
 import "./utils/axios-global";
 import { QueryClientProvider, QueryClient } from "react-query";
+import { SnackbarProvider } from "notistack";
 
 export const appQueryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+    document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <QueryClientProvider client={appQueryClient}>
-      <RootStoreContext.Provider value={new RootStore()}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </RootStoreContext.Provider>
-    </QueryClientProvider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <SnackbarProvider maxSnack={3}>
+            <QueryClientProvider client={appQueryClient}>
+                <RootStoreContext.Provider value={new RootStore()}>
+                    <BrowserRouter>
+                        <App />
+                    </BrowserRouter>
+                </RootStoreContext.Provider>
+            </QueryClientProvider>
+        </SnackbarProvider>
+    </React.StrictMode>
 );

@@ -1,24 +1,18 @@
 import { makeAutoObservable } from "mobx";
 
 class ModalsStore {
-  isSongUploadModalActive = false;
-  playlistToAddToId?: number;
+    isSongUploadModalActive = false;
+    playlistToAddToId?: number;
 
-  snackbarMessage: string = "";
+    constructor() {
+        makeAutoObservable(this);
+    }
 
-  constructor() {
-    makeAutoObservable(this);
-  }
+    toggleSongUploadModal(playlistToAddToId?: number) {
+        this.isSongUploadModalActive = !this.isSongUploadModalActive;
 
-  toggleSongUploadModal(playlistToAddToId?: number) {
-    this.isSongUploadModalActive = !this.isSongUploadModalActive;
-
-    this.playlistToAddToId = playlistToAddToId;
-  }
-
-  setSnackbarMessage(message: string) {
-    this.snackbarMessage = message;
-  }
+        this.playlistToAddToId = playlistToAddToId;
+    }
 }
 
 export default new ModalsStore();

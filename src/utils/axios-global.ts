@@ -1,3 +1,4 @@
 import axios from "axios";
+import { BACKEND_URL } from "../config";
 
-axios.defaults.baseURL = "http://localhost:5000/api/v1";
+axios.defaults.baseURL = `${BACKEND_URL}/api/v1`;

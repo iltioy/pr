@@ -10,13 +10,11 @@ import { OrderedSongType, PlaylistType, SongType } from "../../types";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
-import { FRONTEND_URL } from "../../config";
-import { useSnackbar } from "notistack";
-import useCopy from "../../hooks/useCopy";
 
-const PlaylistPage = observer(() => {
-    const { playlistId } = useParams();
+const SongPage = observer(() => {
+    const { songId } = useParams();
     const [songs, setSongs] = useState<SongType[]>([]);
+    // const [playlist, setPlaylist] = useState<PlaylistType | null>(null)
 
     const extractSongsFromOrderdSongs = (playlist?: PlaylistType) => {
         if (!playlist) return;
@@ -30,24 +28,31 @@ const PlaylistPage = observer(() => {
     };
 
     const { data: playlist, isLoading } = useQuery(
-        ["playlist", playlistId],
+        ["playlist", songId],
         () => {
-            return axios.get(`/playlists/${playlistId}`);
+            return axios.get(`/songs/${songId}`);
         },
         {
             select: (data) => {
-                const playlist: PlaylistType = data.data;
-                return playlist;
+                const song: SongType = data.data;
+                let mockPlaylist: PlaylistType = {
+                    id: 0,
+                    image: {
+                        image_key: song.image.image_key,
+                        image_url: song.image.image_url,
+                    },
+                    name: song.name,
+                    order: 0,
+                    owner: song.owner,
+                    songs: [{ order: 1, song }],
+                };
+                return mockPlaylist;
             },
             onSuccess: (data) => {
                 extractSongsFromOrderdSongs(data);
             },
             refetchOnWindowFocus: false,
         }
-    );
-
-    const { copy } = useCopy(
-        `${FRONTEND_URL}/${playlist?.owner.username}/playlist/${playlist?.id}`
     );
 
     const {
@@ -72,6 +77,7 @@ const PlaylistPage = observer(() => {
                     handleOpenPlaylistSettings={handleOpenPlaylistSettings}
                     playlist={playlist}
                     isLoading={isLoading}
+                    isSongPlaylist
                 />
 
                 <PlaylistSongs
@@ -94,11 +100,11 @@ const PlaylistPage = observer(() => {
                 }}
             >
                 <MenuItem>Скачать</MenuItem>
-                <MenuItem onClick={copy}>Экспорт</MenuItem>
+                <MenuItem>Экспорт</MenuItem>
                 <MenuItem></MenuItem>
             </Menu>
         </Stack>
     );
 });
 
-export default PlaylistPage;
+export default SongPage;

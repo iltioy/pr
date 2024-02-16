@@ -22,9 +22,8 @@ import RecoverPassword from "./pages/AuthPage/PasswordRecovery/RecoverPassword";
 import { ReactQueryDevtools } from "react-query/devtools";
 import EditPlaylistPage from "./pages/EditPlaylistPage/EditPlaylistPage";
 import SongUploadModal from "./components/modals/SongUploadModal/SongUploadModal";
-import AlertSnackbar from "./components/Snackbars/AlertSnackbar";
-import GlobalAlertSnackbar from "./components/Snackbars/GlobalAlertSnackbar";
 import songsStore from "./stores/songs-store";
+import SongPage from "./pages/PlaylistPage/SongPage";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -161,28 +160,45 @@ const App = observer(() => {
 
                 <>
                     {modalsStore.isSongUploadModalActive && <SongUploadModal />}
-                    <GlobalAlertSnackbar severity="success" message={modalsStore.snackbarMessage} />
                 </>
 
-                {songsStore.current_song && userStore.access_token && <SongTrack />}
+                {songsStore.current_song && userStore.access_token && (
+                    <SongTrack />
+                )}
 
                 <Routes>
                     <Route path="/auth" element={<AuthPage />}>
                         <Route index element={<LoginForm />} />
                         <Route path="register" element={<RegisterForm />} />
                         <Route path="email/verify" element={<ConfirmEmail />} />
-                        <Route path="password/recover" element={<RecoverPasswordRequest />} />
-                        <Route path="password/recover/:recoveryId" element={<RecoverPassword />} />
+                        <Route
+                            path="password/recover"
+                            element={<RecoverPasswordRequest />}
+                        />
+                        <Route
+                            path="password/recover/:recoveryId"
+                            element={<RecoverPassword />}
+                        />
                     </Route>
 
                     <Route element={<ProtectedRoutes />}>
-                        <Route path="/:username/playlist/:playlistId" element={<PlaylistPage />} />
+                        <Route
+                            path="/:username/playlist/:playlistId"
+                            element={<PlaylistPage />}
+                        />
                         <Route
                             path="/:username/playlist/:playlistId/edit"
                             element={<EditPlaylistPage />}
                         />
-                        <Route path="/:username/playlists" element={<AllPlaylistsPage />} />
+                        <Route
+                            path="/:username/playlists"
+                            element={<AllPlaylistsPage />}
+                        />
                         <Route path="/radio" element={<RadioPage />} />
+                        <Route
+                            path="/playlist/song/:songId"
+                            element={<SongPage />}
+                        />
                     </Route>
                 </Routes>
             </ThemeProvider>

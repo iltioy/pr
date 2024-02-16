@@ -18,6 +18,7 @@ import { useFormik } from "formik";
 import PlaylistQueries from "../../../queries/playlists";
 import path from "path-browserify";
 import { FileInfo, newFileInfo } from "./SongUploadModal";
+import { useSnackbar } from "notistack";
 
 const DEFAULT_MUSIC_IMAGE_URL =
     "https://sun6-23.userapi.com/s/v1/ig2/fCU0l_DjmTovIKbT969SqRNxQpBkl8_l00z0vPJY-tOy2vHwd9eY7rGCloekqrGzgLvANYSf886sRaMsTBDM2Blr.jpg?size=1068x1068&quality=95&crop=4,0,1068,1068&ava=1";
@@ -47,6 +48,8 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
         const [isLoading, setIsLoading] = useState(false);
         const { modalsStore } = useStores();
 
+        const { enqueueSnackbar } = useSnackbar();
+
         const handleUploadSong = async (info: UploadSongInfoProps) => {
             setIsLoading(true);
             try {
@@ -72,7 +75,10 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                     );
                 }
 
-                modalsStore.setSnackbarMessage("Аудио успешно загружено!");
+                enqueueSnackbar("Аудио успешно загружено!", {
+                    variant: "success",
+                    autoHideDuration: 3000,
+                });
 
                 if (multipleFiles && handleGoBackFormEditing) {
                     handleGoBackFormEditing({

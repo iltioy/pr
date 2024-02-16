@@ -25,6 +25,7 @@ interface PlaylistHeaderProps {
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => void;
     isLoading?: boolean;
+    isSongPlaylist?: boolean;
 }
 
 const PlaylistHeader = observer(
@@ -32,6 +33,7 @@ const PlaylistHeader = observer(
         playlist,
         handleOpenPlaylistSettings,
         isLoading,
+        isSongPlaylist,
     }: PlaylistHeaderProps) => {
         const theme = useTheme();
         const navigate = useNavigate();
@@ -173,6 +175,9 @@ const PlaylistHeader = observer(
                                         xs: "0px",
                                         md: "20px",
                                     },
+                                    display: `${
+                                        isSongPlaylist ? "none" : "unset"
+                                    }`,
                                 }}
                             >
                                 {playlist &&
@@ -250,6 +255,11 @@ const PlaylistHeader = observer(
                                         songsStore.setSongQueue(playlist);
                                         songsStore.shuffleSongQueue();
                                     }
+                                }}
+                                sx={{
+                                    marginTop: `${
+                                        isSongPlaylist ? "20px" : "unset"
+                                    }`,
                                 }}
                             >
                                 <PressableButton

@@ -16,6 +16,9 @@ import useMenu from "../hooks/useMenu";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../root-store-context";
 import SongsQuieries from "../queries/songs";
+import { FRONTEND_URL } from "../config";
+import { useSnackbar } from "notistack";
+import useCopy from "../hooks/useCopy";
 
 interface SongRecordProps {
     song: SongType;
@@ -35,6 +38,7 @@ const SongRecord = observer(
         } = useMenu();
 
         const { songsStore } = useStores();
+        const { copy } = useCopy(`${FRONTEND_URL}/playlist/song/${song.id}`);
 
         return (
             <>
@@ -193,7 +197,7 @@ const SongRecord = observer(
                     }}
                 >
                     <MenuItem>Скачать</MenuItem>
-                    <MenuItem>Экспорт</MenuItem>
+                    <MenuItem onClick={copy}>Экспорт</MenuItem>
                 </Menu>
             </>
         );

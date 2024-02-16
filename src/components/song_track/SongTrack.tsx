@@ -11,6 +11,10 @@ import SongProgress from "./SongProgress";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
 import SongQueries from "../../queries/songs";
+import modalsStore from "../../stores/modals-store";
+import { useSnackbar } from "notistack";
+import { FRONTEND_URL } from "../../config";
+import useCopy from "../../hooks/useCopy";
 // import useSound from "use-sound";
 
 const audio = new Audio();
@@ -22,6 +26,10 @@ const SongTrack = observer(() => {
 
     const { songsStore } = useStores();
     const { current_song } = songsStore;
+
+    const { copy } = useCopy(
+        `${FRONTEND_URL}/playlist/song/${current_song?.id}`
+    );
 
     // const [play, { sound, duration }] = useSound(
     //   songsStore.current_song?.url || ""
@@ -293,7 +301,7 @@ const SongTrack = observer(() => {
                             </IconButton>
                         )}
 
-                        <IconButton>
+                        <IconButton onClick={copy}>
                             <ShareSharpIcon
                                 sx={{
                                     fontSize: "24px",
