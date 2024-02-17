@@ -15,15 +15,13 @@ const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
 );
 root.render(
-    <React.StrictMode>
-        <SnackbarProvider maxSnack={3}>
-            <QueryClientProvider client={appQueryClient}>
-                <RootStoreContext.Provider value={new RootStore()}>
-                    <BrowserRouter>
-                        <App />
-                    </BrowserRouter>
-                </RootStoreContext.Provider>
-            </QueryClientProvider>
-        </SnackbarProvider>
-    </React.StrictMode>
+    <SnackbarProvider maxSnack={3}>
+        <QueryClientProvider client={appQueryClient}>
+            <RootStoreContext.Provider value={new RootStore()}>
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
+            </RootStoreContext.Provider>
+        </QueryClientProvider>
+    </SnackbarProvider>
 );
