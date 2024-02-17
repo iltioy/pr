@@ -133,11 +133,19 @@ class SongsQueries {
 
             console.log(moodKeys, genreKeys, lanuageKeys);
 
-            const res = await axios.post("/songs/get/radio", {
-                genres: genreKeys,
-                moods: moodKeys,
-                languages: lanuageKeys,
-            });
+            const res = await axios.post(
+                "/songs/get/radio",
+                {
+                    genres: genreKeys,
+                    moods: moodKeys,
+                    languages: lanuageKeys,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userStore.access_token}`,
+                    },
+                }
+            );
 
             const song: SongType = res.data;
 
@@ -145,6 +153,18 @@ class SongsQueries {
         } catch (error) {
             console.log(error);
         }
+    };
+
+    blacklistSong = async (songId: number) => {
+        return axios.post(
+            `/songs/blacklist/${songId}`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${userStore.access_token}`,
+                },
+            }
+        );
     };
 
     findTwoKeysWithHighestValues(obj: Record<string, number>): string[] {

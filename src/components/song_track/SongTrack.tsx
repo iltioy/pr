@@ -11,10 +11,9 @@ import SongProgress from "./SongProgress";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
 import SongQueries from "../../queries/songs";
-import modalsStore from "../../stores/modals-store";
-import { useSnackbar } from "notistack";
 import { FRONTEND_URL } from "../../config";
 import useCopy from "../../hooks/useCopy";
+import SongsQueries from "../../queries/songs";
 // import useSound from "use-sound";
 
 const audio = new Audio();
@@ -47,6 +46,25 @@ const SongTrack = observer(() => {
             audio.pause();
         }
         setIsAudioPlaying(false);
+    };
+
+    const handleBlacklistSong = () => {
+        if (!current_song) return;
+        SongsQueries.blacklistSong(current_song.id)
+            .then(() => {
+                skipSong();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    const skipSong = () => {
+        if (songsStore.radio) {
+            SongQueries.getSongFromRadio();
+        } else {
+            songsStore.setCurrentSongToNextInQueue();
+        }
     };
 
     const handleSetProgress = (newProgress: number) => {
@@ -86,11 +104,7 @@ const SongTrack = observer(() => {
         };
 
         audio.onended = () => {
-            if (songsStore.radio) {
-                SongQueries.getSongFromRadio();
-            } else {
-                songsStore.setCurrentSongToNextInQueue();
-            }
+            skipSong();
         };
     }, [isAudioPlaying, audio]);
 
@@ -181,11 +195,7 @@ const SongTrack = observer(() => {
                                 },
                             }}
                             onClick={() => {
-                                if (songsStore.radio) {
-                                    SongQueries.getSongFromRadio();
-                                } else {
-                                    songsStore.setCurrentSongToNextInQueue();
-                                }
+                                skipSong();
                             }}
                         />
                     </Stack>
@@ -313,7 +323,7 @@ const SongTrack = observer(() => {
                                 }}
                             />
                         </IconButton>
-                        <IconButton>
+                        <IconButton onClick={() => handleBlacklistSong()}>
                             <BlockSharpIcon
                                 sx={{
                                     fontSize: "24px",
