@@ -19,7 +19,8 @@ class PlaylistsStore {
     }
 
     setAddedPlaylists(data: any) {
-        const ordered_added_playlists: OrderedPlaylist[] | undefined = data?.added_playlists;
+        const ordered_added_playlists: OrderedPlaylist[] | undefined =
+            data?.added_playlists;
         let added_playlists: PlaylistType[] = [];
         if (!ordered_added_playlists) return;
         ordered_added_playlists?.forEach((orderedPlaylist) => {
@@ -30,7 +31,8 @@ class PlaylistsStore {
     }
 
     setLikedPlaylists(data: any) {
-        const ordered_liked_playlists: OrderedPlaylist[] | undefined = data?.liked_playlists;
+        const ordered_liked_playlists: OrderedPlaylist[] | undefined =
+            data?.liked_playlists;
         if (!ordered_liked_playlists) return;
         let liked_playlists: PlaylistType[] = [];
         ordered_liked_playlists?.forEach((orderedPlaylist) => {
@@ -41,13 +43,15 @@ class PlaylistsStore {
     }
 
     setUserPlaylists(data: any) {
-        const ordered_added_playlists: OrderedPlaylist[] | undefined = data?.added_playlists;
+        const ordered_added_playlists: OrderedPlaylist[] | undefined =
+            data?.added_playlists;
         let added_playlists: PlaylistType[] = [];
         ordered_added_playlists?.forEach((orderedPlaylist) => {
             added_playlists.push(orderedPlaylist.playlist);
         });
 
-        const ordered_liked_playlists: OrderedPlaylist[] | undefined = data?.liked_playlists;
+        const ordered_liked_playlists: OrderedPlaylist[] | undefined =
+            data?.liked_playlists;
         let liked_playlists: PlaylistType[] = [];
         ordered_liked_playlists?.forEach((orderedPlaylist) => {
             liked_playlists.push(orderedPlaylist.playlist);
@@ -56,11 +60,15 @@ class PlaylistsStore {
         let added_playlists_ids: number[] = [];
         let liked_playlists_ids: number[] = [];
         added_playlists.forEach((el) => {
-            added_playlists_ids.push(el.id);
+            if (el) {
+                added_playlists_ids.push(el.id);
+            }
         });
 
         liked_playlists.forEach((el) => {
-            liked_playlists_ids.push(el.id);
+            if (el) {
+                liked_playlists_ids.push(el.id);
+            }
         });
 
         this.setFavoritePlaylist(added_playlists);
@@ -87,7 +95,7 @@ class PlaylistsStore {
         let favoritePlaylist: PlaylistType | undefined;
 
         playlists.forEach((el: PlaylistType) => {
-            if (el.is_favorite) {
+            if (el && el.is_favorite) {
                 favoritePlaylist = el;
             }
         });

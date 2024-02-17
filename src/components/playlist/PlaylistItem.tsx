@@ -9,6 +9,8 @@ import { useNavigate, useParams } from "react-router";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
 import PlaylistQueries from "../../queries/playlists";
+import useCopy from "../../hooks/useCopy";
+import { FRONTEND_URL } from "../../config";
 
 interface PlaylistItemIconsProps {
     playlist: PlaylistType;
@@ -32,6 +34,10 @@ const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(
         const handleToggleFavoritePlaylist = () => {
             PlaylistQueries.toggleFavoritePlaylist(playlist.id, username);
         };
+
+        const { copy } = useCopy(
+            `${FRONTEND_URL}/${playlist?.owner.username}/playlist/${playlist?.id}`
+        );
 
         return (
             <>
@@ -129,6 +135,10 @@ const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(
                                 transform: `scale(${shareIconScale})`,
                             },
                         }}
+                        onClick={(e) => {
+                            copy();
+                            e.stopPropagation();
+                        }}
                         ref={shareIconRef}
                     >
                         <IosShareIcon
@@ -136,9 +146,6 @@ const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(
                             sx={{
                                 width: "25px",
                                 height: "25px",
-                            }}
-                            onClick={(e) => {
-                                e.stopPropagation();
                             }}
                         />
                     </Stack>

@@ -2,8 +2,6 @@ import axios from "axios";
 import playlistsStore from "../stores/playlists-store";
 import userStore from "../stores/user-store";
 import { appQueryClient as queryClient } from "..";
-import { useMutation } from "react-query";
-import { PlaylistType } from "../types";
 
 class PlaylistQueries {
     toggleFavoritePlaylist = async (playlistId: number, username?: string) => {
@@ -50,7 +48,7 @@ class PlaylistQueries {
         }
     };
 
-    createPlaylistQuery = () => {
+    createPlaylist = () => {
         return axios.post(
             "/playlists/create",
             {},
@@ -62,11 +60,10 @@ class PlaylistQueries {
         );
     };
 
-    useCreatePlaylist = (onSuccess: (playlist: PlaylistType) => void) => {
-        return useMutation(this.createPlaylistQuery, {
-            onSuccess: (data) => {
-                const playlist: PlaylistType = data.data;
-                onSuccess(playlist);
+    deletePlaylist = (id: number) => {
+        return axios.delete(`/playlists/delete/${id}`, {
+            headers: {
+                Authorization: `Bearer ${userStore.access_token}`,
             },
         });
     };

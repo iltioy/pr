@@ -3,20 +3,24 @@ import "./playlistPage.styles.css";
 import PlaylistHeader from "./PlaylistHeader";
 import PlaylistSongs from "./PlaylistSongs";
 import useMenu from "../../hooks/useMenu";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { OrderedSongType, PlaylistType, SongType } from "../../types";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
 import { FRONTEND_URL } from "../../config";
-import { useSnackbar } from "notistack";
 import useCopy from "../../hooks/useCopy";
+import PlaylistQueries from "../../queries/playlists";
+import { enqueueSnackbar } from "notistack";
+import ConfirmationModal from "../../components/modals/ConfirmationModal";
 
 const PlaylistPage = observer(() => {
     const { playlistId } = useParams();
     const [songs, setSongs] = useState<SongType[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigage = useNavigate();
 
     const extractSongsFromOrderdSongs = (playlist?: PlaylistType) => {
         if (!playlist) return;
@@ -43,6 +47,21 @@ const PlaylistPage = observer(() => {
                 extractSongsFromOrderdSongs(data);
             },
             refetchOnWindowFocus: false,
+        }
+    );
+
+    const { mutate: deletePalylist } = useMutation(
+        () => {
+            return PlaylistQueries.deletePlaylist(Number(playlistId));
+        },
+        {
+            onSuccess: () => {
+                enqueueSnackbar(`Плейлист ${playlist?.name} удалён!`, {
+                    variant: "success",
+                    autoHideDuration: 3000,
+                });
+                navigage(`/${playlist?.owner.username}/playlists`);
+            },
         }
     );
 
@@ -95,8 +114,21 @@ const PlaylistPage = observer(() => {
             >
                 <MenuItem>Скачать</MenuItem>
                 <MenuItem onClick={copy}>Экспорт</MenuItem>
-                <MenuItem></MenuItem>
+                <MenuItem onClick={() => setIsModalOpen(true)}>
+                    Удалить
+                </MenuItem>
             </Menu>
+
+            <ConfirmationModal
+                cancelText="Отменить"
+                confirmationAction={() => {
+                    deletePalylist();
+                    setIsModalOpen(false);
+                }}
+                confirmationText="Удалить"
+                open={isModalOpen}
+                setOpen={setIsModalOpen}
+            />
         </Stack>
     );
 });

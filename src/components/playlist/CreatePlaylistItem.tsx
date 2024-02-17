@@ -10,7 +10,7 @@ const CreatePlaylistItem = observer(() => {
     const navigate = useNavigate();
 
     const { isLoading, mutate: createPlaylist } = useMutation(
-        PlaylistQueries.createPlaylistQuery,
+        PlaylistQueries.createPlaylist,
         {
             onSuccess: (data) => {
                 const playlist: PlaylistType = data.data;

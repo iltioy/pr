@@ -257,8 +257,8 @@ const PlaylistHeader = observer(
                                     }
                                 }}
                                 sx={{
-                                    marginTop: `${
-                                        isSongPlaylist ? "20px" : "unset"
+                                    display: `${
+                                        isSongPlaylist ? "none" : "unset"
                                     }`,
                                 }}
                             >
