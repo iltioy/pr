@@ -5,8 +5,38 @@ import { playlists } from "../../faker";
 import PlaylistTableItem from "../../components/admin/PlaylistTableItem";
 import CreatePlaylistTableItem from "../../components/admin/CreatePlaylistTableItem";
 import AddIcon from "@mui/icons-material/Add";
+import ConfirmationModal from "../../components/modals/ConfirmationModal";
+import { useState } from "react";
+import CategoriesQueries from "../../queries/categories";
+import { useMutation } from "react-query";
+import { useSnackbar } from "notistack";
+import { Category as CategorType } from "../../types";
+
+interface EditCategoriesProps {
+    category: CategorType;
+}
 
 const EditCategories = observer(() => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const categoryId = 1;
+
+    const { enqueueSnackbar } = useSnackbar();
+
+    // const {mutate: createCategory} = useMutation()
+
+    const { mutate: deleteCategory } = useMutation(
+        () => CategoriesQueries.deleteCategory(categoryId),
+        {
+            onSuccess: () => {
+                enqueueSnackbar("Успешно удалено!", {
+                    variant: "success",
+                    autoHideDuration: 3000,
+                });
+            },
+        }
+    );
+
     return (
         <Stack height="100%" marginTop="50px">
             <Stack flexDirection="row" gap="25px" marginBottom="10px">
@@ -76,11 +106,30 @@ const EditCategories = observer(() => {
                 </Stack>
             </Box>
 
-            <Box marginTop="auto">
+            <Stack flexDirection="row" gap="30px" marginTop="auto">
                 <Button variant="contained" color="primary">
                     Coхранить
                 </Button>
-            </Box>
+
+                <Button
+                    onClick={() => setIsModalOpen(true)}
+                    variant="contained"
+                    color="error"
+                >
+                    Удалить
+                </Button>
+            </Stack>
+
+            <ConfirmationModal
+                cancelText="Отменить"
+                confirmationAction={() => {
+                    deleteCategory();
+                    setIsModalOpen(false);
+                }}
+                confirmationText="Удалить"
+                open={isModalOpen}
+                setOpen={setIsModalOpen}
+            />
         </Stack>
     );
 });

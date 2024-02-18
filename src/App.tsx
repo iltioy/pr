@@ -204,12 +204,12 @@ const App = observer(() => {
                             path="/playlist/song/:songId"
                             element={<SongPage />}
                         />
-                    </Route>
 
-                    <Route element={<AdminRoutes />} path="/admin">
-                        <Route index element={<Navigate to="radio" />} />
-                        <Route element={<AdminPage />}>
-                            <Route element={<AdminRadio />} path="radio" />
+                        <Route element={<AdminRoutes />} path="/admin">
+                            <Route index element={<Navigate to="radio" />} />
+                            <Route element={<AdminPage />}>
+                                <Route element={<AdminRadio />} path="radio" />
+                            </Route>
                         </Route>
                     </Route>
                 </Routes>

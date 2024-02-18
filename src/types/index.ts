@@ -76,3 +76,16 @@ export interface CreateSongBody {
     album?: string;
     image?: ImageType;
 }
+
+export interface Category {
+    id: number;
+    name: string;
+    playlists: OrderedPlaylist[];
+    owner: UserType;
+}
+
+export interface OrderedCategory {
+    order: number;
+    category: Category;
+    id: number;
+}
