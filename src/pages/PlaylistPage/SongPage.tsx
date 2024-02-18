@@ -44,7 +44,7 @@ const SongPage = observer(() => {
                     name: song.name,
                     order: 0,
                     owner: song.owner,
-                    songs: [{ order: 1, song }],
+                    songs: [{ order: 1, song, id: -1 }],
                 };
                 return mockPlaylist;
             },
@@ -84,6 +84,7 @@ const SongPage = observer(() => {
                     playlist={playlist}
                     data={songs}
                     isLoading={isLoading}
+                    isSongPage
                 />
             </Stack>
             <Menu

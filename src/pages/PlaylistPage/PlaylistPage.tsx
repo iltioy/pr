@@ -24,9 +24,9 @@ const PlaylistPage = observer(() => {
 
     const extractSongsFromOrderdSongs = (playlist?: PlaylistType) => {
         if (!playlist) return;
-        const orderedSongs: OrderedSongType[] = playlist.songs;
+        const orderedSongsRes: OrderedSongType[] = playlist.songs;
         const newSongs: SongType[] = [];
-        orderedSongs.map((orderedSong) => {
+        orderedSongsRes.map((orderedSong) => {
             newSongs.push(orderedSong.song);
         });
 
