@@ -1,4 +1,11 @@
-import { AppBar, Button, Stack, Toolbar, Typography, InputBase } from "@mui/material";
+import {
+    AppBar,
+    Button,
+    Stack,
+    Toolbar,
+    Typography,
+    InputBase,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useLocation } from "react-router";
 import SearchIcon from "@mui/icons-material/Search";
@@ -7,7 +14,6 @@ import SearchWindow from "./modals/SearchWindow";
 import { useNavigate } from "react-router";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../root-store-context";
-import SongUploadModal from "./modals/SongUploadModal/SongUploadModal";
 
 interface NavbarProps {
     topRef?: React.MutableRefObject<HTMLSpanElement | null>;
@@ -100,12 +106,19 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
 
                         <Button
                             color="inherit"
-                            onClick={() => navigate(`/${userStore.user.username}/playlists`)}
+                            onClick={() =>
+                                navigate(
+                                    `/${userStore.user.username}/playlists`
+                                )
+                            }
                         >
                             Мои плейлисты
                         </Button>
 
-                        <Button color="inherit" onClick={() => modalsStore.toggleSongUploadModal()}>
+                        <Button
+                            color="inherit"
+                            onClick={() => modalsStore.toggleSongUploadModal()}
+                        >
                             Загрузить трек
                         </Button>
                     </Stack>
@@ -115,7 +128,9 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                         alignItems="center"
                         p="4px"
                         borderBottom={{
-                            sm: `1px solid ${isSearchOpened ? "#ffffff" : themeColor}`,
+                            sm: `1px solid ${
+                                isSearchOpened ? "#ffffff" : themeColor
+                            }`,
                             xs: "none",
                             zIndex: 11,
                         }}
@@ -152,7 +167,9 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                     </Stack>
                 </Toolbar>
 
-                {isSearchOpened && <SearchWindow setIsSearchOpened={setIsSearchOpened} />}
+                {isSearchOpened && (
+                    <SearchWindow setIsSearchOpened={setIsSearchOpened} />
+                )}
             </AppBar>
         </>
     );

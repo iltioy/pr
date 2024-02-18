@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthPage from "./pages/AuthPage/AuthPage";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 // import Navbar from "./components/Navbar";
 // import { useRef } from "react";
@@ -10,7 +10,7 @@ import { Box } from "@mui/material";
 import SongTrack from "./components/song_track/SongTrack";
 import { useStores } from "./root-store-context";
 import { useEffect } from "react";
-import ProtectedRoutes from "./pages/Protected/ProtectedRoutes";
+import ProtectedRoutes from "./pages/Protected/AuthenticatedRoutes";
 import axios from "axios";
 import { observer } from "mobx-react-lite";
 import { useLocation } from "react-router-dom";
@@ -24,6 +24,10 @@ import EditPlaylistPage from "./pages/EditPlaylistPage/EditPlaylistPage";
 import SongUploadModal from "./components/modals/SongUploadModal/SongUploadModal";
 import songsStore from "./stores/songs-store";
 import SongPage from "./pages/PlaylistPage/SongPage";
+import AuthenticatedRoutes from "./pages/Protected/AuthenticatedRoutes";
+import AdminRoutes from "./pages/Protected/AdminRoutes";
+import AdminPage from "./pages/AdminPage/AdminPage";
+import AdminRadio from "./pages/AdminPage/AdminRadio";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -128,9 +132,10 @@ const App = observer(() => {
     const logout = () => {
         userStore.logout();
         // console.log(location.pathname, location.pathname.startsWith("/auth"));
-        if (location.pathname.startsWith("/auth")) return;
+        if (!location.pathname.startsWith("/auth")) {
+            navigate("/auth");
+        }
         // console.log("no return");
-        navigate("/auth");
     };
 
     useEffect(() => {
@@ -181,7 +186,7 @@ const App = observer(() => {
                         />
                     </Route>
 
-                    <Route element={<ProtectedRoutes />}>
+                    <Route element={<AuthenticatedRoutes />}>
                         <Route
                             path="/:username/playlist/:playlistId"
                             element={<PlaylistPage />}
@@ -199,6 +204,13 @@ const App = observer(() => {
                             path="/playlist/song/:songId"
                             element={<SongPage />}
                         />
+                    </Route>
+
+                    <Route element={<AdminRoutes />} path="/admin">
+                        <Route index element={<Navigate to="radio" />} />
+                        <Route element={<AdminPage />}>
+                            <Route element={<AdminRadio />} path="radio" />
+                        </Route>
                     </Route>
                 </Routes>
             </ThemeProvider>
