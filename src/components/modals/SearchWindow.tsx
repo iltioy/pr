@@ -92,7 +92,9 @@ const SearchWindow: React.FC<SearchWindowProps> = observer(
         const createSongCotext = () => {
             setSongContext((prevState) => {
                 let orderedSongs: OrderedSongType[] = [];
-                songs.forEach((song) => orderedSongs.push({ song, order: 1 }));
+                songs.forEach((song) =>
+                    orderedSongs.push({ song, order: 1, id: -1 })
+                );
                 return {
                     ...prevState,
                     songs: orderedSongs,

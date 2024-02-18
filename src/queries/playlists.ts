@@ -2,6 +2,7 @@ import axios from "axios";
 import playlistsStore from "../stores/playlists-store";
 import userStore from "../stores/user-store";
 import { appQueryClient as queryClient } from "..";
+import { SongType } from "../types";
 
 class PlaylistQueries {
     toggleFavoritePlaylist = async (playlistId: number, username?: string) => {
@@ -30,7 +31,7 @@ class PlaylistQueries {
 
     addSongToPlaylist = async (playlistId: number, songId: number) => {
         try {
-            const res = await axios.patch(
+            await axios.patch(
                 `/playlists/${playlistId}/song/add/${songId}`,
                 {},
                 {
@@ -43,6 +44,24 @@ class PlaylistQueries {
             queryClient.invalidateQueries({
                 queryKey: ["playlist", String(playlistId)],
             });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    reorderPlaylist = async (playlistId: number, songs: SongType[]) => {
+        try {
+            await axios.patch(
+                `/playlists/reorder/${playlistId}/`,
+                {
+                    songs,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userStore.access_token}`,
+                    },
+                }
+            );
         } catch (error) {
             console.log(error);
         }

@@ -31,6 +31,7 @@ export interface SongType {
 }
 
 export interface OrderedSongType {
+    id: number;
     order: number;
     song: SongType;
 }
