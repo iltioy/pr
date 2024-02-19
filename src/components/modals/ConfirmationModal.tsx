@@ -36,6 +36,7 @@ interface ConfirmationModalProps {
     cancelText: string;
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    modalText: string;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
@@ -44,6 +45,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     confirmationText,
     open,
     setOpen,
+    modalText,
 }) => {
     const handleClose = () => setOpen(false);
 
@@ -61,7 +63,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                         component="h2"
                         paddingBottom="20px"
                     >
-                        Удалить этот Плейлист?
+                        {modalText}
                     </Typography>
                     <Stack flexDirection="row" gap="20px">
                         <Box>

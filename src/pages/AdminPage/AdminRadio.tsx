@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import Table from "../../components/admin/Table";
-import EditCategories from "./EditCategories";
+import EditCategory from "./Categories/EditCategory";
 import { observer } from "mobx-react-lite";
 
 const AdminRadio = observer(() => {
@@ -12,7 +12,7 @@ const AdminRadio = observer(() => {
 
             {/* <Table></Table> */}
 
-            <EditCategories />
+            <EditCategory />
         </>
     );
 });

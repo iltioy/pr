@@ -28,6 +28,8 @@ import AuthenticatedRoutes from "./pages/Protected/AuthenticatedRoutes";
 import AdminRoutes from "./pages/Protected/AdminRoutes";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import AdminRadio from "./pages/AdminPage/AdminRadio";
+import CategoriesList from "./pages/AdminPage/Categories/CategoriesList";
+import EditCategory from "./pages/AdminPage/Categories/EditCategory";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -42,6 +44,7 @@ const darkTheme = createTheme({
             bg: {
                 main: "#121212",
                 secondary: "#181818",
+                primary: "#1565c0",
             },
             main: "#121212",
         },
@@ -206,9 +209,18 @@ const App = observer(() => {
                         />
 
                         <Route element={<AdminRoutes />} path="/admin">
-                            <Route index element={<Navigate to="radio" />} />
+                            <Route
+                                index
+                                element={<Navigate to="categories" />}
+                            />
                             <Route element={<AdminPage />}>
-                                <Route element={<AdminRadio />} path="radio" />
+                                <Route path="categories">
+                                    <Route element={<CategoriesList />} index />
+                                    <Route
+                                        path=":id"
+                                        element={<EditCategory />}
+                                    />
+                                </Route>
                             </Route>
                         </Route>
                     </Route>

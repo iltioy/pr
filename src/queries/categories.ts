@@ -6,7 +6,11 @@ interface CategoryBody {
 }
 
 class CategoriesQueries {
-    createCategory = async (categoryId: number, body: CategoryBody) => {
+    getCategory = async (categoryId: number) => {
+        return axios.get(`/categories/${categoryId}`);
+    };
+
+    createCategory = async (body: CategoryBody) => {
         return axios.post(
             `/categories/create`,
             {
@@ -20,7 +24,10 @@ class CategoriesQueries {
         );
     };
 
-    updateCategory = async (categoryId: number, body: CategoryBody) => {
+    updateCategory = async (
+        categoryId: number | string,
+        body: CategoryBody
+    ) => {
         return axios.patch(
             `/categories/update/${categoryId}`,
             {
@@ -33,7 +40,11 @@ class CategoriesQueries {
             }
         );
     };
-    addPlaylistToCategory = async (categoryId: number, playlistId: number) => {
+
+    addPlaylistToCategory = async (
+        categoryId: number | string,
+        playlistId: number | string
+    ) => {
         return axios.patch(
             `/categories/${categoryId}/playlist/add/${playlistId}`,
             {},
@@ -44,9 +55,10 @@ class CategoriesQueries {
             }
         );
     };
+
     removePlaylistFromCategory = async (
-        categoryId: number,
-        playlistId: number
+        categoryId: number | string,
+        playlistId: number | string
     ) => {
         return axios.delete(
             `/categories/${categoryId}/playlist/remove/${playlistId}`,
@@ -57,7 +69,7 @@ class CategoriesQueries {
             }
         );
     };
-    deleteCategory = (categoryId: number) => {
+    deleteCategory = (categoryId: number | string) => {
         return axios.delete(`/categories/delete/${categoryId}`, {
             headers: {
                 Authorization: `Bearer ${userStore.access_token}`,

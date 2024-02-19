@@ -128,6 +128,7 @@ const PlaylistPage = observer(() => {
                 confirmationText="Удалить"
                 open={isModalOpen}
                 setOpen={setIsModalOpen}
+                modalText="Удалить этот Плейлист?"
             />
         </Stack>
     );

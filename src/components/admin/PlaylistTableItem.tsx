@@ -5,10 +5,11 @@ import { useNavigate } from "react-router";
 
 interface PlaylistTableItemProps {
     playlist: PlaylistType;
+    onDelete: (playlistId: number) => Promise<void>;
 }
 
 const PlaylistTableItem: React.FC<PlaylistTableItemProps> = observer(
-    ({ playlist }) => {
+    ({ playlist, onDelete }) => {
         const navigate = useNavigate();
 
         return (
@@ -51,11 +52,15 @@ const PlaylistTableItem: React.FC<PlaylistTableItemProps> = observer(
                                     textDecoration: "underline",
                                 },
                             }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(playlist.id);
+                            }}
                         >
                             Удалить
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                            Count: {playlist.songs.length + 1}
+                            Count: {playlist.songs?.length + 1}
                         </Typography>
                     </Stack>
                 </Stack>
