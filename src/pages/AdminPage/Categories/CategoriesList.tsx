@@ -15,7 +15,6 @@ const CategoriesList = observer(() => {
             return data.data;
         },
         onSuccess: (data) => {
-            console.log(data);
             if (!data) return;
             setCategories(data);
         },

@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { OrderedPlaylist, PlaylistType } from "../types";
 import songsStore from "./songs-store";
+import { extractPlaylistsFromOrderd } from "../utils/playlists";
 
 class PlaylistsStore {
     added_playlists: PlaylistType[] = [];
@@ -21,11 +22,10 @@ class PlaylistsStore {
     setAddedPlaylists(data: any) {
         const ordered_added_playlists: OrderedPlaylist[] | undefined =
             data?.added_playlists;
-        let added_playlists: PlaylistType[] = [];
         if (!ordered_added_playlists) return;
-        ordered_added_playlists?.forEach((orderedPlaylist) => {
-            added_playlists.push(orderedPlaylist.playlist);
-        });
+        let added_playlists: PlaylistType[] = extractPlaylistsFromOrderd(
+            ordered_added_playlists
+        );
 
         this.added_playlists = added_playlists;
     }
@@ -34,10 +34,9 @@ class PlaylistsStore {
         const ordered_liked_playlists: OrderedPlaylist[] | undefined =
             data?.liked_playlists;
         if (!ordered_liked_playlists) return;
-        let liked_playlists: PlaylistType[] = [];
-        ordered_liked_playlists?.forEach((orderedPlaylist) => {
-            liked_playlists.push(orderedPlaylist.playlist);
-        });
+        let liked_playlists: PlaylistType[] = extractPlaylistsFromOrderd(
+            ordered_liked_playlists
+        );
 
         this.liked_playlists = liked_playlists;
     }
@@ -45,17 +44,15 @@ class PlaylistsStore {
     setUserPlaylists(data: any) {
         const ordered_added_playlists: OrderedPlaylist[] | undefined =
             data?.added_playlists;
-        let added_playlists: PlaylistType[] = [];
-        ordered_added_playlists?.forEach((orderedPlaylist) => {
-            added_playlists.push(orderedPlaylist.playlist);
-        });
+        let added_playlists: PlaylistType[] = extractPlaylistsFromOrderd(
+            ordered_added_playlists
+        );
 
         const ordered_liked_playlists: OrderedPlaylist[] | undefined =
             data?.liked_playlists;
-        let liked_playlists: PlaylistType[] = [];
-        ordered_liked_playlists?.forEach((orderedPlaylist) => {
-            liked_playlists.push(orderedPlaylist.playlist);
-        });
+        let liked_playlists: PlaylistType[] = extractPlaylistsFromOrderd(
+            ordered_liked_playlists
+        );
 
         let added_playlists_ids: number[] = [];
         let liked_playlists_ids: number[] = [];

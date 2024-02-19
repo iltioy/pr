@@ -72,8 +72,6 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
                                 return newState;
                             });
 
-                            console.log(fileInfo);
-
                             const uploadInfo: UploadSongData = {
                                 author: audioAuthor,
                                 album,
@@ -122,8 +120,6 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
                                         newState.push(prevFileInfo);
                                     }
                                 });
-
-                                console.log(prevState, newState);
 
                                 return newState;
                             });

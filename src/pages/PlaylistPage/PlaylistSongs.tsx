@@ -57,8 +57,6 @@ const SongList = observer(({ data, playlist }: SongListProps) => {
             result.destination.index
         );
 
-        console.log(newSongs);
-
         if (!playlist) return;
         PlaylistQueries.reorderPlaylist(playlist.id, newSongs);
         setState(newSongs);

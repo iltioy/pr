@@ -122,16 +122,12 @@ class SongsQueries {
                 });
             });
 
-            console.log(moodCorreleation, languageCorrelation);
-
             const moodKeys =
                 this.findTwoKeysWithHighestValues(moodCorreleation);
             const genreKeys =
                 this.findTwoKeysWithHighestValues(genreCorrelation);
             const lanuageKeys =
                 this.findTwoKeysWithHighestValues(languageCorrelation);
-
-            console.log(moodKeys, genreKeys, lanuageKeys);
 
             const res = await axios.post(
                 "/songs/get/radio",

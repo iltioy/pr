@@ -83,7 +83,7 @@ class SongsStore {
 
     setSongQueue(songContext: PlaylistType) {
         let songs_queue: SongType[] = [];
-        songContext.songs.forEach((song) => {
+        songContext.songs?.forEach((song) => {
             songs_queue.push(song.song);
         });
 

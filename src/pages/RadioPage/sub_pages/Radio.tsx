@@ -7,9 +7,24 @@ import { playlists } from "../../../faker";
 import PlaylistCarouselSection from "../../../components/playlist/PlaylistCarouselSection";
 import SongQueries from "../../../queries/songs";
 import { observer } from "mobx-react-lite";
+import { useQuery } from "react-query";
+import { Category } from "../../../types";
+import axios from "axios";
+import { extractPlaylistsFromOrderd } from "../../../utils/playlists";
 
 const Radio = observer(() => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
+    const [categories, setCategories] = useState<Category[]>([]);
+
+    useQuery("categories", () => axios.get("/categories"), {
+        select: (data) => {
+            return data.data;
+        },
+        onSuccess: (data) => {
+            if (!data) return;
+            setCategories(data);
+        },
+    });
 
     return (
         <>
@@ -103,10 +118,21 @@ const Radio = observer(() => {
                         </Stack>
                     </Stack>
                     {/* <PlaylistsSection title="Поп" /> */}
-                    <PlaylistCarouselSection
-                        playlists={playlists}
-                        title="Новые"
-                    />
+
+                    {categories.map((category) => {
+                        const playlists = extractPlaylistsFromOrderd(
+                            category.playlists
+                        );
+
+                        if (!playlists) return;
+                        if (playlists.length === 0) return;
+                        return (
+                            <PlaylistCarouselSection
+                                playlists={playlists}
+                                title={category.name}
+                            />
+                        );
+                    })}
                 </Stack>
             </Stack>
         </>
