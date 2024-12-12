@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite";
-import { PlaylistType } from "../../types";
+import { Playlist } from "../../types";
 import { Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
 
 interface PlaylistTableItemProps {
-    playlist: PlaylistType;
+    playlist: Playlist;
     onDelete: (playlistId: number) => Promise<void>;
 }
 
@@ -29,7 +29,7 @@ const PlaylistTableItem: React.FC<PlaylistTableItemProps> = observer(
                 }}
             >
                 <img
-                    src={`${playlist.image.image_url}`}
+                    src={`${playlist.image_url}`}
                     style={{
                         objectFit: "cover",
                         width: "40px",

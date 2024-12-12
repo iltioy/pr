@@ -1,7 +1,7 @@
 import userStore from "../stores/user-store";
 import axios from "axios";
 import { FileInfo } from "../components/modals/SongUploadModal/SongUploadModal";
-import { SongType } from "../types";
+import { Song } from "../types";
 import songsStore from "../stores/songs-store";
 import playlistsStore from "../stores/playlists-store";
 
@@ -75,7 +75,7 @@ class SongsQueries {
                 }
             );
 
-            const song: SongType = res.data;
+            const song: Song = res.data;
             return song;
         } catch (error) {
             throw error;
@@ -106,8 +106,7 @@ class SongsQueries {
             };
 
             playlistsStore.added_playlists.map((playlist) => {
-                playlist.songs.map((songInstance) => {
-                    const { song } = songInstance;
+                playlist.songs.map((song) => {
                     if (song.mood && moods.length === 0) {
                         moodCorreleation[song.mood] += 1;
                     }
@@ -143,7 +142,7 @@ class SongsQueries {
                 }
             );
 
-            const song: SongType = res.data;
+            const song: Song = res.data;
 
             songsStore.setCurrentSong(song, true);
         } catch (error) {

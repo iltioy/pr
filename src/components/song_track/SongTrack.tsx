@@ -212,7 +212,7 @@ const SongTrack = observer(() => {
                         }}
                     >
                         <img
-                            src={current_song?.image.image_url}
+                            src={current_song?.image_url}
                             alt=""
                             style={{
                                 height: "53px",

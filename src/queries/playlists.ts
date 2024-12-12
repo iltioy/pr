@@ -2,7 +2,7 @@ import axios from "axios";
 import playlistsStore from "../stores/playlists-store";
 import userStore from "../stores/user-store";
 import { appQueryClient as queryClient } from "..";
-import { SongType } from "../types";
+import { Song } from "../types";
 
 class PlaylistQueries {
     toggleFavoritePlaylist = async (playlistId: number, username?: string) => {
@@ -49,7 +49,7 @@ class PlaylistQueries {
         }
     };
 
-    reorderPlaylist = async (playlistId: number, songs: SongType[]) => {
+    reorderPlaylist = async (playlistId: number, songs: Song[]) => {
         try {
             await axios.patch(
                 `/playlists/reorder/${playlistId}/`,

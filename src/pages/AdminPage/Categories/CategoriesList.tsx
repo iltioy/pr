@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import CategoryItem from "../../../components/admin/CategoryItem";
 import { useQuery } from "react-query";
 import { useState } from "react";
-import { Category, OrderedCategory } from "../../../types";
+import { Category } from "../../../types";
 import axios from "axios";
 import { observer } from "mobx-react-lite";
 import { useCreateCategory } from "../../../mutations/categories";

@@ -10,7 +10,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import EditIcon from "@mui/icons-material/Edit";
-import { PlaylistType } from "../../types";
+import { Playlist } from "../../types";
 import { useTheme } from "@mui/material/styles";
 import { observer } from "mobx-react-lite";
 import PressableButton from "../../components/MixSongsButton";
@@ -20,7 +20,7 @@ import { useNavigate, useParams } from "react-router";
 import PlaylistQueries from "../../queries/playlists";
 
 interface PlaylistHeaderProps {
-    playlist?: PlaylistType;
+    playlist?: Playlist;
     handleOpenPlaylistSettings: (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => void;
@@ -90,7 +90,7 @@ const PlaylistHeader = observer(
                         top: 0,
                         bottom: 0,
                         zIndex: 2,
-                        background: `url(${playlist?.image.image_url}) no-repeat center center fixed`,
+                        background: `url(${playlist?.image_url}) no-repeat center center fixed`,
                         backgroundSize: "cover",
                         filter: "blur(10px)",
                     }}

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import SongRecord from "../SongRecord";
 import axios from "axios";
-import { PlaylistType, SongType, OrderedSongType } from "../../types";
+import { Playlist, Song } from "../../types";
 import SearchIcon from "@mui/icons-material/Search";
 import songsStore from "../../stores/songs-store";
 import { observer } from "mobx-react-lite";
@@ -21,9 +21,9 @@ let searchedPages: number[] = [];
 let page: number = 0;
 let isLimitReached: boolean = false;
 
-let mockPlaylist: PlaylistType = {
+let mockPlaylist: Playlist = {
     id: 0,
-    image: {},
+    image_url: "",
     name: "mock",
     order: 0,
     owner: {},
@@ -44,7 +44,7 @@ const SearchWindow: React.FC<SearchWindowProps> = observer(
             SearchStatus.CATALOG
         );
         const [searchValue, setSearchValue] = useState("");
-        const [songs, setSongs] = useState<SongType[]>([]);
+        const [songs, setSongs] = useState<Song[]>([]);
         const [delay, setDelay] = useState(1000);
         const [songContext, setSongContext] = useState(mockPlaylist);
 
@@ -57,7 +57,7 @@ const SearchWindow: React.FC<SearchWindowProps> = observer(
                     `/songs/search?query=${searchValue}&page=${page}`
                 );
 
-                const data: SongType[] = res.data;
+                const data: Song[] = res.data;
 
                 setSongs((prevData) => {
                     return [...prevData, ...data];
@@ -91,13 +91,11 @@ const SearchWindow: React.FC<SearchWindowProps> = observer(
 
         const createSongCotext = () => {
             setSongContext((prevState) => {
-                let orderedSongs: OrderedSongType[] = [];
-                songs.forEach((song) =>
-                    orderedSongs.push({ song, order: 1, id: -1 })
-                );
+                let songs: Song[] = [];
+                songs.forEach((song) => songs.push(song));
                 return {
                     ...prevState,
-                    songs: orderedSongs,
+                    songs: songs,
                 };
             });
         };
@@ -245,7 +243,7 @@ const SearchWindow: React.FC<SearchWindowProps> = observer(
                         }}
                         paddingBottom="50px"
                     >
-                        {songs?.map((song: SongType, index: number) => {
+                        {songs?.map((song: Song, index: number) => {
                             return (
                                 <SongRecord
                                     key={index}

@@ -6,26 +6,15 @@ import useMenu from "../../hooks/useMenu";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { useParams } from "react-router";
-import { OrderedSongType, PlaylistType, SongType } from "../../types";
+import { Song, Playlist } from "../../types";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
 
 const SongPage = observer(() => {
     const { songId } = useParams();
-    const [songs, setSongs] = useState<SongType[]>([]);
+    const [songs, setSongs] = useState<Song[]>([]);
     // const [playlist, setPlaylist] = useState<PlaylistType | null>(null)
-
-    const extractSongsFromOrderdSongs = (playlist?: PlaylistType) => {
-        if (!playlist) return;
-        const orderedSongs: OrderedSongType[] = playlist.songs;
-        const newSongs: SongType[] = [];
-        orderedSongs.map((orderedSong) => {
-            newSongs.push(orderedSong.song);
-        });
-
-        setSongs(newSongs);
-    };
 
     const { data: playlist, isLoading } = useQuery(
         ["playlist", songId],
@@ -34,22 +23,19 @@ const SongPage = observer(() => {
         },
         {
             select: (data) => {
-                const song: SongType = data.data;
-                let mockPlaylist: PlaylistType = {
+                const song: Song = data.data;
+                let mockPlaylist: Playlist = {
                     id: 0,
-                    image: {
-                        image_key: song.image.image_key,
-                        image_url: song.image.image_url,
-                    },
+                    image_url: song.image_url,
                     name: song.name,
                     order: 0,
                     owner: song.owner,
-                    songs: [{ order: 1, song, id: -1 }],
+                    songs: [song],
                 };
                 return mockPlaylist;
             },
-            onSuccess: (data) => {
-                extractSongsFromOrderdSongs(data);
+            onSuccess: (data: Playlist) => {
+                setSongs(data.songs);
             },
             refetchOnWindowFocus: false,
         }

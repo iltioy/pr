@@ -1,5 +1,4 @@
 import axios from "axios";
-import { ImageType } from "../types";
 import userStore from "../stores/user-store";
 
 class FilesQueries {
@@ -15,9 +14,9 @@ class FilesQueries {
                     Authorization: `Bearer ${userStore.access_token}`,
                 },
             });
-            const image: ImageType = res.data;
+            const image_url = res.data.image_url;
 
-            return image;
+            return image_url;
         } catch (error) {
             console.log(error);
         }

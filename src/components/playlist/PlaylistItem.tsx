@@ -4,7 +4,7 @@ import IosShareIcon from "@mui/icons-material/IosShare";
 import useHold from "../../hooks/useHold";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { PlaylistType } from "../../types";
+import { Playlist } from "../../types";
 import { useNavigate, useParams } from "react-router";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
@@ -13,7 +13,7 @@ import useCopy from "../../hooks/useCopy";
 import { FRONTEND_URL } from "../../config";
 
 interface PlaylistItemIconsProps {
-    playlist: PlaylistType;
+    playlist: Playlist;
 }
 
 const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(
@@ -156,7 +156,7 @@ const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(
 );
 
 interface PlaylisyItemProps {
-    playlist: PlaylistType;
+    playlist: Playlist;
 }
 
 const PlaylistItem: React.FC<PlaylisyItemProps> = observer(({ playlist }) => {
@@ -214,7 +214,7 @@ const PlaylistItem: React.FC<PlaylisyItemProps> = observer(({ playlist }) => {
                     }}
                 >
                     <img
-                        src={playlist.image.image_url}
+                        src={playlist.image_url}
                         alt=""
                         style={{
                             objectFit: "cover",

@@ -10,7 +10,6 @@ import { observer } from "mobx-react-lite";
 import { useQuery } from "react-query";
 import { Category } from "../../../types";
 import axios from "axios";
-import { extractPlaylistsFromOrderd } from "../../../utils/playlists";
 
 const Radio = observer(() => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
@@ -120,9 +119,7 @@ const Radio = observer(() => {
                     {/* <PlaylistsSection title="Поп" /> */}
 
                     {categories.map((category) => {
-                        const playlists = extractPlaylistsFromOrderd(
-                            category.playlists
-                        );
+                        const playlists = category.playlists;
 
                         if (!playlists) return;
                         if (playlists.length === 0) return;

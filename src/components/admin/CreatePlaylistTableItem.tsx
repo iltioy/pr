@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { PlaylistType } from "../../types";
+import { Playlist } from "../../types";
 import { Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useMutation } from "react-query";
@@ -13,7 +13,7 @@ const CreatePlaylistTableItem: React.FC = observer(() => {
         PlaylistQueries.createPlaylist,
         {
             onSuccess: (data) => {
-                const playlist: PlaylistType = data.data;
+                const playlist: Playlist = data.data;
                 if (!playlist) return;
                 navigate(
                     `/${playlist.owner?.username}/playlist/${playlist.id}/edit`

@@ -14,7 +14,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ConfirmationModal from "../../../components/modals/ConfirmationModal";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { OrderedPlaylist } from "../../../types";
+import { Playlist } from "../../../types";
 import { useNavigate, useParams } from "react-router";
 import {
     useDeleteCategory,
@@ -28,7 +28,7 @@ import { useQueryClient } from "react-query";
 const EditCategory = observer(() => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [name, setName] = useState("");
-    const [playlists, setPlaylists] = useState<OrderedPlaylist[]>([]);
+    const [playlists, setPlaylists] = useState<Playlist[]>([]);
     const [currentPlaylistId, setCurrentPlaylistId] = useState("");
 
     const queryClient = useQueryClient();
@@ -159,7 +159,7 @@ const EditCategory = observer(() => {
                         return (
                             <Box>
                                 <PlaylistTableItem
-                                    playlist={playlist.playlist}
+                                    playlist={playlist}
                                     onDelete={handleRemovePlaylist}
                                 />
                             </Box>

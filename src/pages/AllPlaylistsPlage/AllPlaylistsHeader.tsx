@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
 import PressableButton from "../../components/MixSongsButton";
 import { playlists } from "../../faker";
-import { PlaylistType } from "../../types";
+import { Playlist } from "../../types";
 import * as _ from "lodash";
 
 const AllPlaylistsHeader = observer(() => {
@@ -100,11 +100,15 @@ const AllPlaylistsHeader = observer(() => {
                             window.scrollTo({ top: 0, behavior: "smooth" });
                             songsStore.clearSongQueue();
 
-                            let playlist: PlaylistType = _.cloneDeep(
+                            let playlist: Playlist = _.cloneDeep(
                                 playlistsStore.added_playlists[0]
                             );
 
-                            for (let i = 1; i < playlistsStore.added_playlists.length; i++) {
+                            for (
+                                let i = 1;
+                                i < playlistsStore.added_playlists.length;
+                                i++
+                            ) {
                                 playlist.songs = [
                                     ...playlist.songs,
                                     ...playlistsStore.added_playlists[i].songs,

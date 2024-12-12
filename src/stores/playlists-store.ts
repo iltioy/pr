@@ -1,68 +1,55 @@
 import { makeAutoObservable } from "mobx";
-import { OrderedPlaylist, PlaylistType } from "../types";
+import { Playlist } from "../types";
 import songsStore from "./songs-store";
-import { extractPlaylistsFromOrderd } from "../utils/playlists";
 
 class PlaylistsStore {
-    added_playlists: PlaylistType[] = [];
-    liked_playlists: PlaylistType[] = [];
+    added_playlists: Playlist[] = [];
+    liked_playlists: Playlist[] = [];
 
-    user_added_playlists: PlaylistType[] = [];
-    user_liked_playlists: PlaylistType[] = [];
+    user_added_playlists: Playlist[] = [];
+    user_liked_playlists: Playlist[] = [];
 
     user_added_playlists_ids: number[] = [];
     user_liked_playlists_ids: number[] = [];
 
-    user_favorite_playlist?: PlaylistType | undefined;
+    user_favorite_playlist?: Playlist | undefined;
 
     constructor() {
         makeAutoObservable(this);
     }
 
     setAddedPlaylists(data: any) {
-        const ordered_added_playlists: OrderedPlaylist[] | undefined =
-            data?.added_playlists;
-        if (!ordered_added_playlists) return;
-        let added_playlists: PlaylistType[] = extractPlaylistsFromOrderd(
-            ordered_added_playlists
-        );
+        const added_playlists: Playlist[] | undefined = data?.added_playlists;
+        if (!added_playlists) return;
 
         this.added_playlists = added_playlists;
     }
 
     setLikedPlaylists(data: any) {
-        const ordered_liked_playlists: OrderedPlaylist[] | undefined =
-            data?.liked_playlists;
-        if (!ordered_liked_playlists) return;
-        let liked_playlists: PlaylistType[] = extractPlaylistsFromOrderd(
-            ordered_liked_playlists
-        );
+        const liked_playlists: Playlist[] | undefined = data?.liked_playlists;
+        if (!liked_playlists) return;
 
         this.liked_playlists = liked_playlists;
     }
 
     setUserPlaylists(data: any) {
-        const ordered_added_playlists: OrderedPlaylist[] | undefined =
-            data?.added_playlists;
-        let added_playlists: PlaylistType[] = extractPlaylistsFromOrderd(
-            ordered_added_playlists
-        );
+        const added_playlists: Playlist[] | undefined = data?.added_playlists;
 
-        const ordered_liked_playlists: OrderedPlaylist[] | undefined =
-            data?.liked_playlists;
-        let liked_playlists: PlaylistType[] = extractPlaylistsFromOrderd(
-            ordered_liked_playlists
-        );
+        const liked_playlists: Playlist[] | undefined = data?.liked_playlists;
+
+        console.log({ data });
+
+        if (!added_playlists || !liked_playlists) return;
 
         let added_playlists_ids: number[] = [];
         let liked_playlists_ids: number[] = [];
-        added_playlists.forEach((el) => {
+        added_playlists?.forEach((el) => {
             if (el) {
                 added_playlists_ids.push(el.id);
             }
         });
 
-        liked_playlists.forEach((el) => {
+        liked_playlists?.forEach((el) => {
             if (el) {
                 liked_playlists_ids.push(el.id);
             }
@@ -88,16 +75,18 @@ class PlaylistsStore {
         this.user_liked_playlists_ids = newUserLikedPlaylistIds;
     }
 
-    setFavoritePlaylist(playlists: PlaylistType[]) {
-        let favoritePlaylist: PlaylistType | undefined;
+    setFavoritePlaylist(playlists: Playlist[]) {
+        let favoritePlaylist: Playlist | undefined;
 
-        playlists.forEach((el: PlaylistType) => {
+        playlists.forEach((el: Playlist) => {
             if (el && el.is_favorite) {
                 favoritePlaylist = el;
             }
         });
 
         this.user_favorite_playlist = favoritePlaylist;
+
+        console.log({ favoritePlaylist });
 
         if (favoritePlaylist) {
             songsStore.setLikedSongsIds(favoritePlaylist);
