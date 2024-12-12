@@ -1,5 +1,5 @@
 import { Grid, Stack, Skeleton } from "@mui/material";
-import { OrderedSongType, PlaylistType, SongType } from "../../types";
+import { Song, Playlist } from "../../types";
 import SongRecord from "../../components/SongRecord";
 import { observer } from "mobx-react-lite";
 import AddSongItem from "../../components/playlist/AddSongItem";
@@ -15,17 +15,17 @@ import PlaylistQueries from "../../queries/playlists";
 import { useStores } from "../../root-store-context";
 
 interface PlaylistSongsProps {
-    data: SongType[];
-    orderedSongs?: OrderedSongType[];
+    data: Song[];
+    orderedSongs?: Song[];
     isLoading?: boolean;
     isEdit?: boolean;
-    playlist?: PlaylistType;
+    playlist?: Playlist;
     isSongPage?: boolean;
 }
 
 interface SongListProps {
-    data: SongType[];
-    playlist?: PlaylistType;
+    data: Song[];
+    playlist?: Playlist;
 }
 
 const PlaylistWrapper = styled.div`
@@ -33,7 +33,7 @@ const PlaylistWrapper = styled.div`
 `;
 
 const SongList = observer(({ data, playlist }: SongListProps) => {
-    const [state, setState] = useState<SongType[]>([]);
+    const [state, setState] = useState<Song[]>([]);
 
     useEffect(() => {
         if (!data) return;
@@ -62,11 +62,7 @@ const SongList = observer(({ data, playlist }: SongListProps) => {
         setState(newSongs);
     }
 
-    const reorder = (
-        list: SongType[],
-        startIndex: number,
-        endIndex: number
-    ) => {
+    const reorder = (list: Song[], startIndex: number, endIndex: number) => {
         const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
@@ -77,7 +73,7 @@ const SongList = observer(({ data, playlist }: SongListProps) => {
     if (playlist?.owner.username !== userStore.user.username) {
         return (
             <>
-                {data.map((song: SongType, index: number) => {
+                {data.map((song: Song, index: number) => {
                     return (
                         <SongRecord
                             songContext={playlist}
@@ -95,7 +91,7 @@ const SongList = observer(({ data, playlist }: SongListProps) => {
             <Droppable droppableId="list" direction="vertical">
                 {(provided) => (
                     <div ref={provided.innerRef} {...provided.droppableProps}>
-                        {state.map((song: SongType, index: number) => {
+                        {state.map((song: Song, index: number) => {
                             return (
                                 <Draggable
                                     draggableId={String(song.id)}

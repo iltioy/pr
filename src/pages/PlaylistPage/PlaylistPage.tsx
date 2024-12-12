@@ -6,7 +6,7 @@ import useMenu from "../../hooks/useMenu";
 import { useMutation, useQuery } from "react-query";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router";
-import { OrderedSongType, PlaylistType, SongType } from "../../types";
+import { Song, Playlist } from "../../types";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
@@ -18,19 +18,16 @@ import ConfirmationModal from "../../components/modals/ConfirmationModal";
 
 const PlaylistPage = observer(() => {
     const { playlistId } = useParams();
-    const [songs, setSongs] = useState<SongType[]>([]);
+    const [songs, setSongs] = useState<Song[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigage = useNavigate();
 
-    const extractSongsFromOrderdSongs = (playlist?: PlaylistType) => {
+    const extractSongsFromOrderdSongs = (playlist?: Playlist) => {
         if (!playlist) return;
-        const orderedSongsRes: OrderedSongType[] = playlist.songs;
-        const newSongs: SongType[] = [];
-        orderedSongsRes.map((orderedSong) => {
-            newSongs.push(orderedSong.song);
-        });
 
-        setSongs(newSongs);
+        console.log({ playlist });
+
+        setSongs(playlist.songs);
     };
 
     const { data: playlist, isLoading } = useQuery(
@@ -40,7 +37,7 @@ const PlaylistPage = observer(() => {
         },
         {
             select: (data) => {
-                const playlist: PlaylistType = data.data;
+                const playlist: Playlist = data.data;
                 return playlist;
             },
             onSuccess: (data) => {

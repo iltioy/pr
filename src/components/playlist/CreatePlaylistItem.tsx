@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useMutation } from "react-query";
 import PlaylistQueries from "../../queries/playlists";
 import { observer } from "mobx-react-lite";
-import { PlaylistType } from "../../types";
+import { Playlist } from "../../types";
 
 const CreatePlaylistItem = observer(() => {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ const CreatePlaylistItem = observer(() => {
         PlaylistQueries.createPlaylist,
         {
             onSuccess: (data) => {
-                const playlist: PlaylistType = data.data;
+                const playlist: Playlist = data.data;
                 if (!playlist) return;
                 navigate(
                     `/${playlist.owner?.username}/playlist/${playlist.id}/edit`

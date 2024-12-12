@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { OrderedSongType, PlaylistType, SongType } from "../types";
+import { Playlist, Song } from "../types";
 
 interface SongPreferences {
     moods: string[];
@@ -8,12 +8,12 @@ interface SongPreferences {
 }
 
 class SongsStore {
-    current_playlist_songs: SongType[] = [];
-    liked_songs: SongType[] = [];
+    current_playlist_songs: Song[] = [];
+    liked_songs: Song[] = [];
     liked_songs_ids: number[] = [];
 
-    current_song?: SongType;
-    songs_queue: SongType[] = [];
+    current_song?: Song;
+    songs_queue: Song[] = [];
 
     song_preferences: SongPreferences = { moods: [], languages: [], types: [] };
     radio: boolean = false;
@@ -22,13 +22,13 @@ class SongsStore {
         makeAutoObservable(this);
     }
 
-    setLikedSongsIds(playlist: PlaylistType) {
+    setLikedSongsIds(playlist: Playlist) {
         const ids: number[] = [];
-        const songs: SongType[] = [];
+        const songs: Song[] = [];
 
-        playlist.songs.forEach((orderedSong: OrderedSongType) => {
-            ids.push(orderedSong.song.id);
-            songs.push(orderedSong.song);
+        playlist.songs.forEach((song: Song) => {
+            ids.push(song.id);
+            songs.push(song);
         });
 
         this.liked_songs = songs;
@@ -46,7 +46,7 @@ class SongsStore {
         this.liked_songs_ids = newUserLikedSongIds;
     }
 
-    setCurrentSong(song: SongType, radio: boolean) {
+    setCurrentSong(song: Song, radio: boolean) {
         this.radio = radio;
 
         if (this.current_song) {
@@ -81,10 +81,10 @@ class SongsStore {
         this.songs_queue = [];
     }
 
-    setSongQueue(songContext: PlaylistType) {
-        let songs_queue: SongType[] = [];
+    setSongQueue(songContext: Playlist) {
+        let songs_queue: Song[] = [];
         songContext.songs?.forEach((song) => {
-            songs_queue.push(song.song);
+            songs_queue.push(song);
         });
 
         this.songs_queue = songs_queue;
@@ -115,7 +115,7 @@ class SongsStore {
     }
 
     searchSongs(query: string) {
-        const songs: SongType[] = [];
+        const songs: Song[] = [];
         const songsIds: number[] = [];
 
         this.liked_songs.forEach((song) => {

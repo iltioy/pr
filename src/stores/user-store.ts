@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx";
-import { ImageType, OrderedPlaylist, PlaylistType } from "../types";
+import { Playlist, Song } from "../types";
 
 interface User {
+    id?: number;
     username?: string;
     email?: string;
     role?: string;
-    image?: ImageType;
+    image_url?: string;
 }
 
 class UserStore {
@@ -30,7 +31,7 @@ class UserStore {
     setUserInfo(data: User) {
         this.user = {
             email: data.email,
-            image: data.image,
+            image_url: data.image_url,
             role: data.role,
             username: data.username,
         };

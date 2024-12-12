@@ -9,7 +9,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useState } from "react";
-import { ImageType, SongType } from "../../../types";
+import { Song } from "../../../types";
 import FilesQueries from "../../../queries/files";
 import SongsQueries from "../../../queries/songs";
 import { observer } from "mobx-react-lite";
@@ -38,12 +38,8 @@ export interface UploadSongInfoProps {
 
 const SongUploadForm: React.FC<SongUploadFormProps> = observer(
     ({ fileInfo, setError, multipleFiles, handleGoBackFormEditing }) => {
-        const [songImage, setSongImage] = useState<ImageType>(
-            fileInfo?.image_url
-                ? {
-                      image_url: fileInfo?.image_url,
-                  }
-                : {}
+        const [songImage, setSongImage] = useState<string>(
+            fileInfo?.image_url || ""
         );
         const [isLoading, setIsLoading] = useState(false);
         const { modalsStore } = useStores();
@@ -57,8 +53,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                     name: info.name,
                     author: info.author,
                     album: info.album,
-                    image_key: songImage.image_key,
-                    image_url: songImage.image_url,
+                    image_url: songImage,
                 };
 
                 const song = await SongsQueries.uploadSong(
@@ -85,7 +80,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                         name: song.name,
                         author: song.author,
                         uploaded: true,
-                        image_url: songImage.image_url,
+                        image_url: songImage,
                         album: song.album,
                         file: fileInfo?.file,
                     });
@@ -231,8 +226,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
 
                                     <img
                                         src={`${
-                                            songImage.image_url ||
-                                            DEFAULT_MUSIC_IMAGE_URL
+                                            songImage || DEFAULT_MUSIC_IMAGE_URL
                                         }`}
                                         style={{
                                             height: "75px",
@@ -316,8 +310,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                                                     name,
                                                     uploaded: false,
                                                     album,
-                                                    image_url:
-                                                        songImage.image_url,
+                                                    image_url: songImage,
                                                     file: fileInfo?.file,
                                                 });
                                             }}

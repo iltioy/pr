@@ -10,7 +10,7 @@ import {
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { PlaylistType, SongType } from "../types";
+import { Playlist, Song } from "../types";
 import { SxProps, Theme } from "@mui/material";
 import useMenu from "../hooks/useMenu";
 import { observer } from "mobx-react-lite";
@@ -21,11 +21,11 @@ import { useSnackbar } from "notistack";
 import useCopy from "../hooks/useCopy";
 
 interface SongRecordProps {
-    song: SongType;
+    song: Song;
 
     sx?: SxProps<Theme> | undefined;
     search?: boolean;
-    songContext?: PlaylistType;
+    songContext?: Playlist;
 }
 
 const SongRecord = observer(
@@ -66,7 +66,7 @@ const SongRecord = observer(
                     }}
                 >
                     <img
-                        src={song.image.image_url}
+                        src={song.image_url}
                         style={{
                             height: "50px",
                             width: "50px",

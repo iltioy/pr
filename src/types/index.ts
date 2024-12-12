@@ -16,24 +16,20 @@ enum Language {
     nowords = "nowords",
 }
 
-export interface SongType {
+export interface Song {
     id: number;
     name: string;
     url: string;
     author: string;
     album?: string;
-    image: ImageType;
-    owner: UserType;
+    image_url: string;
+    owner: User;
 
     genre?: Genre;
     mood?: Mood;
     language?: Language;
-}
 
-export interface OrderedSongType {
-    id: number;
-    order: number;
-    song: SongType;
+    order?: number;
 }
 
 export const enum RadioSubPage {
@@ -42,31 +38,22 @@ export const enum RadioSubPage {
     TRENDS = "В ТРЕНДЕ",
 }
 
-export interface ImageType {
-    image_key?: string;
-    image_url?: string;
-}
-
-export interface PlaylistType {
+export interface Playlist {
     id: number;
     name: string;
     is_favorite?: boolean;
-    image: ImageType;
-    owner: UserType;
+    image_url: string;
+    owner: User;
     order: number;
-    songs: OrderedSongType[];
+    songs: Song[];
 }
 
-export interface OrderedPlaylist {
-    order: number;
-    playlist: PlaylistType;
-}
-
-export interface UserType {
-    username?: string;
+export interface User {
+    id?: number;
     email?: string;
+    username?: string;
     role?: string;
-    image?: ImageType;
+    image_url?: string;
 }
 
 export interface CreateSongBody {
@@ -74,18 +61,12 @@ export interface CreateSongBody {
     url: string;
     author: string;
     album?: string;
-    image?: ImageType;
+    image_url?: string;
 }
 
 export interface Category {
     id: number;
     name: string;
-    playlists: OrderedPlaylist[];
-    owner: UserType;
-}
-
-export interface OrderedCategory {
-    order: number;
-    category: Category;
-    id: number;
+    playlists: Playlist[];
+    owner: User;
 }

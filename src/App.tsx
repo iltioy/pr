@@ -135,9 +135,9 @@ const App = observer(() => {
     const logout = () => {
         userStore.logout();
         // console.log(location.pathname, location.pathname.startsWith("/auth"));
-        if (!location.pathname.startsWith("/auth")) {
-            navigate("/auth");
-        }
+        // if (!location.pathname.startsWith("/auth")) {
+        //     navigate("/auth");
+        // }
         // console.log("no return");
     };
 

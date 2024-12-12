@@ -1,6 +1,6 @@
 import { Grid, Stack, Typography, Divider } from "@mui/material";
 import PlaylistItem from "./PlaylistItem";
-import { PlaylistType } from "../../types";
+import { Playlist } from "../../types";
 import CreatePlaylistItem from "./CreatePlaylistItem";
 import { observer } from "mobx-react-lite";
 import { useParams } from "react-router";
@@ -8,7 +8,7 @@ import { useStores } from "../../root-store-context";
 
 interface PlaylistsSectionProps {
     title: string;
-    playlists: PlaylistType[];
+    playlists: Playlist[];
     isOwnedPlaylists?: boolean;
 }
 

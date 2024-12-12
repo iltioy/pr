@@ -7,7 +7,7 @@ import {
     Button,
 } from "@mui/material";
 import React, { useState } from "react";
-import { ImageType, PlaylistType } from "../../types";
+import { Playlist } from "../../types";
 import { observer } from "mobx-react-lite";
 import { useTheme } from "@mui/material/styles";
 import PressableButton from "../../components/MixSongsButton";
@@ -17,15 +17,15 @@ import { useStores } from "../../root-store-context";
 import FilesQueries from "../../queries/files";
 
 interface EditPlaylistHeaderProps {
-    playlist?: PlaylistType;
+    playlist?: Playlist;
     handleOpenPlaylistSettings?: (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => void;
     isLoading?: boolean;
     playlistName: string;
     setPlaylistName: React.Dispatch<React.SetStateAction<string>>;
-    playlistImage: ImageType;
-    setPlaylistImage: React.Dispatch<React.SetStateAction<ImageType>>;
+    playlistImage: string;
+    setPlaylistImage: React.Dispatch<React.SetStateAction<string>>;
     handleSaveChanges: () => Promise<void>;
 }
 
@@ -93,8 +93,7 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
                         bottom: 0,
                         zIndex: 2,
                         background: `url(${
-                            playlistImage?.image_url ||
-                            playlist?.image.image_url
+                            playlistImage || playlist?.image_url
                         }) no-repeat center center fixed`,
                         backgroundSize: "cover",
                         filter: "blur(10px)",
