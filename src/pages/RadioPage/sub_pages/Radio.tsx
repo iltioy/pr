@@ -8,22 +8,26 @@ import PlaylistCarouselSection from "../../../components/playlist/PlaylistCarous
 import SongQueries from "../../../queries/songs";
 import { observer } from "mobx-react-lite";
 import { useQuery } from "react-query";
-import { Category } from "../../../types";
+import { Category, Chart } from "../../../types";
 import axios from "axios";
 
 const Radio = observer(() => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
-    const [categories, setCategories] = useState<Category[]>([]);
+    const [chart, setChart] = useState<Chart>();
 
-    useQuery("categories", () => axios.get("/categories"), {
-        select: (data) => {
-            return data.data;
-        },
-        onSuccess: (data) => {
-            if (!data) return;
-            setCategories(data);
-        },
-    });
+    useQuery(
+        "chart-global-categories",
+        () => axios.get("/chart/global-categories"),
+        {
+            select: (data) => {
+                return data.data;
+            },
+            onSuccess: (data) => {
+                if (!data) return;
+                setChart(data);
+            },
+        }
+    );
 
     return (
         <>
@@ -118,7 +122,7 @@ const Radio = observer(() => {
                     </Stack>
                     {/* <PlaylistsSection title="Поп" /> */}
 
-                    {categories.map((category) => {
+                    {chart?.categories?.map((category) => {
                         const playlists = category.playlists;
 
                         if (!playlists) return;

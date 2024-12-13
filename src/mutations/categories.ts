@@ -3,16 +3,24 @@ import { useSnackbar } from "notistack";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router";
 import { appQueryClient as queryClient } from "..";
+import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../constants/charts";
+import ChartQueries from "../queries/charts";
 
-export const useCreateCategory = () => {
+export const useCreateCategoryForChart = () => {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
 
     return useMutation(
         () => CategoriesQueries.createCategory({ name: "Категория" }),
         {
-            onSuccess: (data) => {
-                navigate(`/admin/categories/${data.data?.id}`);
+            onSuccess: async (data) => {
+                await ChartQueries.addCategoryToChart(
+                    CAHRT_GLOBAL_CATEGORIES_NAME,
+                    data.data?.id
+                );
+                navigate(
+                    `/admin/${CAHRT_GLOBAL_CATEGORIES_NAME}/${data.data?.id}`
+                );
             },
             onError: () => {
                 enqueueSnackbar("Не удалось создать категорию!", {

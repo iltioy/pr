@@ -2,6 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
 import { Category as CategoryType } from "../../types";
 import { observer } from "mobx-react-lite";
+import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../../constants/charts";
 
 interface CategoryItemProps {
     category: CategoryType;
@@ -13,7 +14,6 @@ const CategoryItem = observer(({ category }: CategoryItemProps) => {
     return (
         <Stack
             width="100%"
-            bgcolor="custom.bg.primary"
             sx={{
                 cursor: "pointer",
                 ":hover": {
@@ -21,11 +21,15 @@ const CategoryItem = observer(({ category }: CategoryItemProps) => {
                 },
             }}
             padding="5px"
-            marginTop="3px"
+            marginTop="7px"
             color="text.primary"
-            onClick={() => navigate(`/admin/categories/${category.id}`)}
+            onClick={() =>
+                navigate(
+                    `/admin/${CAHRT_GLOBAL_CATEGORIES_NAME}/${category.id}`
+                )
+            }
         >
-            <Typography variant="h6">{category.name}</Typography>
+            <Typography variant="h5">{category.name}</Typography>
         </Stack>
     );
 });

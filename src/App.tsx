@@ -30,6 +30,7 @@ import AdminPage from "./pages/AdminPage/AdminPage";
 import AdminRadio from "./pages/AdminPage/AdminRadio";
 import CategoriesList from "./pages/AdminPage/Categories/CategoriesList";
 import EditCategory from "./pages/AdminPage/Categories/EditCategory";
+import { CAHRT_GLOBAL_CATEGORIES_NAME } from "./constants/charts";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -211,10 +212,14 @@ const App = observer(() => {
                         <Route element={<AdminRoutes />} path="/admin">
                             <Route
                                 index
-                                element={<Navigate to="categories" />}
+                                element={
+                                    <Navigate
+                                        to={CAHRT_GLOBAL_CATEGORIES_NAME}
+                                    />
+                                }
                             />
                             <Route element={<AdminPage />}>
-                                <Route path="categories">
+                                <Route path={CAHRT_GLOBAL_CATEGORIES_NAME}>
                                     <Route element={<CategoriesList />} index />
                                     <Route
                                         path=":id"
