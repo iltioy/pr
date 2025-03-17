@@ -1,7 +1,6 @@
+import { Button, Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { Stack } from "@mui/system";
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router";
 
 const AdminPage = observer(() => {
@@ -42,6 +41,16 @@ const AdminPage = observer(() => {
                 >
                     <Outlet />
                 </Stack>
+                {/* <Stack width="850px">
+                    <Box>
+                        <Button
+                            color="inherit"
+                            onClick={() => navigate("/radio")}
+                        >
+                            На главную
+                        </Button>
+                    </Box>
+                </Stack> */}
             </Stack>
         </Stack>
     );

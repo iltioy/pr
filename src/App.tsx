@@ -30,7 +30,17 @@ import AdminPage from "./pages/AdminPage/AdminPage";
 import AdminRadio from "./pages/AdminPage/AdminRadio";
 import CategoriesList from "./pages/AdminPage/Categories/CategoriesList";
 import EditCategory from "./pages/AdminPage/Categories/EditCategory";
-import { CAHRT_GLOBAL_CATEGORIES_NAME } from "./constants/charts";
+import {
+    CAHRT_GLOBAL_ALBUMS_NAME,
+    CAHRT_GLOBAL_CATEGORIES_NAME,
+    CAHRT_GLOBAL_TRENDS_NAME,
+} from "./constants/admin";
+import ArtistPage from "./pages/ArtistPage/ArtistPage";
+import TrendsEditPage from "./pages/AdminPage/Trends/TrendsEditPage";
+import SongEditModal from "./components/modals/SongEdit/SongEditModal";
+import UsersQueries from "./queries/users";
+import AddSongToPlaylistModal from "./components/modals/AddSongToPlaylist/AddSongToPlaylistModal";
+import AlbumsEditPage from "./pages/AdminPage/Albums/AlbumsEditPage";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -97,20 +107,6 @@ const App = observer(() => {
     //     userStore.re = res.data?.refresh_token
     //   }
     // };
-    const getUserInfo = async () => {
-        try {
-            const res = await axios.get("/users/get/me", {
-                headers: {
-                    Authorization: `Bearer ${userStore.access_token}`,
-                },
-            });
-
-            userStore.setUserInfo(res.data);
-            playlistsStore.setUserPlaylists(res.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const refreshTokens = async () => {
         try {
@@ -143,7 +139,7 @@ const App = observer(() => {
     };
 
     useEffect(() => {
-        getUserInfo();
+        UsersQueries.getMeInfo();
     }, [userStore.access_token]);
 
     useEffect(() => {
@@ -169,6 +165,10 @@ const App = observer(() => {
 
                 <>
                     {modalsStore.isSongUploadModalActive && <SongUploadModal />}
+                    {modalsStore.isSongUpdateModalActive && <SongEditModal />}
+                    {modalsStore.isSongAddToPlaylistModalActive && (
+                        <AddSongToPlaylistModal />
+                    )}
                 </>
 
                 {songsStore.current_song && userStore.access_token && (
@@ -209,6 +209,11 @@ const App = observer(() => {
                             element={<SongPage />}
                         />
 
+                        <Route
+                            path="/artist/:artistName"
+                            element={<ArtistPage />}
+                        />
+
                         <Route element={<AdminRoutes />} path="/admin">
                             <Route
                                 index
@@ -225,6 +230,14 @@ const App = observer(() => {
                                         path=":id"
                                         element={<EditCategory />}
                                     />
+                                </Route>
+
+                                <Route path={CAHRT_GLOBAL_TRENDS_NAME}>
+                                    <Route element={<TrendsEditPage />} index />
+                                </Route>
+
+                                <Route path={CAHRT_GLOBAL_ALBUMS_NAME}>
+                                    <Route element={<AlbumsEditPage />} index />
                                 </Route>
                             </Route>
                         </Route>

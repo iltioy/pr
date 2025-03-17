@@ -3,6 +3,7 @@ import playlistsStore from "../stores/playlists-store";
 import userStore from "../stores/user-store";
 import { appQueryClient as queryClient } from "..";
 import { Song } from "../types";
+import { CAHRT_GLOBAL_TRENDS_NAME } from "../constants/admin";
 
 class PlaylistQueries {
     toggleFavoritePlaylist = async (playlistId: number, username?: string) => {
@@ -29,9 +30,9 @@ class PlaylistQueries {
         }
     };
 
-    addSongToPlaylist = async (playlistId: number, songId: number) => {
+    addSongToPlaylist = async (playlistId: number, songId: string | number) => {
         try {
-            await axios.patch(
+            const res = await axios.patch(
                 `/playlists/${playlistId}/song/add/${songId}`,
                 {},
                 {
@@ -44,6 +45,32 @@ class PlaylistQueries {
             queryClient.invalidateQueries({
                 queryKey: ["playlist", String(playlistId)],
             });
+
+            return res;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    removeSongFromPlaylist = async (
+        playlistId: number,
+        songId: string | number
+    ) => {
+        try {
+            await axios.patch(
+                `/playlists/${playlistId}/song/remove/${songId}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${userStore.access_token}`,
+                    },
+                }
+            );
+
+            queryClient.invalidateQueries({
+                queryKey: ["playlist", String(playlistId)],
+            });
+            queryClient.invalidateQueries(CAHRT_GLOBAL_TRENDS_NAME);
         } catch (error) {
             console.log(error);
         }
@@ -67,10 +94,12 @@ class PlaylistQueries {
         }
     };
 
-    createPlaylist = () => {
+    createPlaylist = (isAlbum?: boolean) => {
         return axios.post(
             "/playlists/create",
-            {},
+            {
+                is_album: isAlbum,
+            },
             {
                 headers: {
                     Authorization: `Bearer ${userStore.access_token}`,

@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import AllPlaylistsHeader from "./AllPlaylistsHeader";
+import ArtistPageHeader from "./ArtistPageHeader";
 import PlaylistsSection from "../../components/playlist/PlaylistsSection";
 import PlaylistCarousel from "../../components/playlist/PlaylistCarousel";
 import { playlists } from "../../faker";
@@ -12,14 +12,14 @@ import Navbar from "../../components/Navbar";
 import { User } from "../../types";
 import { useState } from "react";
 
-const AllPlaylistsPage = observer(() => {
+const ArtistHeader = observer(() => {
     const { playlistsStore, userStore } = useStores();
-    const { username: defaultUsername } = useParams();
+    const { artistName: defaultUsername } = useParams();
 
     const [username, setUsername] = useState(defaultUsername);
 
     const { data: user } = useQuery(
-        "userProfileInfo",
+        ["artistUserInfo", username],
         () => {
             return axios.get(`/users/${username}`);
         },
@@ -35,23 +35,6 @@ const AllPlaylistsPage = observer(() => {
         }
     );
 
-    // useQuery(
-    //     ["playlists", username],
-    //     () => {
-    //         return axios.get(`/playlists/user/${username}`);
-    //     },
-    //     {
-    //         select: (data) => {
-    //             return data.data;
-    //         },
-    //         onSuccess: (data) => {
-    //             playlistsStore.setLikedPlaylists(data);
-    //             playlistsStore.setAddedPlaylists(data);
-    //         },
-    //         refetchOnWindowFocus: false,
-    //     }
-    // );
-
     return (
         <Stack
             height="100%"
@@ -63,7 +46,7 @@ const AllPlaylistsPage = observer(() => {
             color="text.primary"
         >
             <Navbar />
-            <AllPlaylistsHeader
+            <ArtistPageHeader
                 username={username}
                 setUsername={setUsername}
                 user={user}
@@ -89,24 +72,15 @@ const AllPlaylistsPage = observer(() => {
                             },
                         }}
                     >
-                        {playlistsStore.added_playlists.length > 0 && (
+                        {(playlistsStore.albums.length > 0 ||
+                            userStore.user.id === user?.id) && (
                             <PlaylistCarousel
-                                playlists={playlistsStore.added_playlists}
-                                title={
-                                    userStore.user.id === user?.id
-                                        ? "Ваши плейлисты"
-                                        : `Плейлисты ${username}`
-                                }
+                                playlists={playlistsStore.albums}
+                                title="Альбомы"
                                 isOwnedPlaylists={
                                     userStore.user.id === user?.id
                                 }
-                            />
-                        )}
-
-                        {playlistsStore.liked_playlists.length > 0 && (
-                            <PlaylistCarousel
-                                playlists={playlistsStore.liked_playlists}
-                                title="Нравится"
+                                isAlbum
                             />
                         )}
                     </Stack>
@@ -121,31 +95,14 @@ const AllPlaylistsPage = observer(() => {
                         width="100%"
                         flexDirection="column"
                     >
-                        {playlistsStore.added_playlists.length > 0 && (
+                        {(playlistsStore.albums.length > 0 ||
+                            userStore.user.id === user?.id) && (
                             <PlaylistsSection
-                                playlists={playlistsStore.added_playlists}
-                                title={
-                                    userStore.user.id === user?.id
-                                        ? "Ваши плейлисты"
-                                        : `Плейлисты ${username}`
-                                }
+                                playlists={playlistsStore.albums}
+                                title="Альбомы"
                                 isOwnedPlaylists={
                                     userStore.user.id === user?.id
                                 }
-                            />
-                        )}
-
-                        {playlistsStore.liked_playlists.length > 0 && (
-                            <PlaylistsSection
-                                playlists={playlistsStore.liked_playlists}
-                                title="Нравится"
-                            />
-                        )}
-
-                        {playlistsStore.liked_albums.length > 0 && (
-                            <PlaylistsSection
-                                playlists={playlistsStore.liked_albums}
-                                title="Добаленные альбомы"
                                 isAlbum
                             />
                         )}
@@ -156,4 +113,4 @@ const AllPlaylistsPage = observer(() => {
     );
 });
 
-export default AllPlaylistsPage;
+export default ArtistHeader;

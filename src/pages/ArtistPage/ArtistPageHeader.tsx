@@ -19,7 +19,7 @@ interface AllPlaylistsHeaderProps {
 const DEFAULT_PROFILE_IMAGE =
     "https://avatars.mds.yandex.net/get-yapic/0/0-0/islands-200";
 
-const AllPlaylistsHeader: React.FC<AllPlaylistsHeaderProps> = observer(
+const ArtistPageHeader: React.FC<AllPlaylistsHeaderProps> = observer(
     ({ username, setUsername, user }) => {
         const { songsStore, playlistsStore, userStore } = useStores();
         const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -187,7 +187,7 @@ const AllPlaylistsHeader: React.FC<AllPlaylistsHeaderProps> = observer(
                                     songsStore.clearSongQueue();
 
                                     let playlist: Playlist = _.cloneDeep(
-                                        playlistsStore.added_playlists[0]
+                                        playlistsStore.albums[0]
                                     );
 
                                     for (
@@ -235,4 +235,4 @@ const AllPlaylistsHeader: React.FC<AllPlaylistsHeaderProps> = observer(
     }
 );
 
-export default AllPlaylistsHeader;
+export default ArtistPageHeader;

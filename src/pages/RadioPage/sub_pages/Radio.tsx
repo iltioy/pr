@@ -10,21 +10,20 @@ import { observer } from "mobx-react-lite";
 import { useQuery } from "react-query";
 import { Category, Chart } from "../../../types";
 import axios from "axios";
+import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../../../constants/admin";
 
 const Radio = observer(() => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
-    const [chart, setChart] = useState<Chart>();
 
-    useQuery(
+    const { data: chart } = useQuery(
         "chart-global-categories",
-        () => axios.get("/chart/global-categories"),
+        () => axios.get(`/chart/${CAHRT_GLOBAL_CATEGORIES_NAME}`),
         {
             select: (data) => {
                 return data.data;
             },
-            onSuccess: (data) => {
+            onSuccess: (data: Chart) => {
                 if (!data) return;
-                setChart(data);
             },
         }
     );

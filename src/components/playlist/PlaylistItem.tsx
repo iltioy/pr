@@ -244,6 +244,22 @@ const PlaylistItem: React.FC<PlaylisyItemProps> = observer(({ playlist }) => {
                 <Typography width="200px" noWrap>
                     {playlist.name}
                 </Typography>
+
+                {playlist.is_album && (
+                    <Typography
+                        width="200px"
+                        variant="caption"
+                        color="#ccc"
+                        noWrap
+                    >
+                        {playlist.owner.nickname}
+                        {/* • */}
+                        {(playlist.is_album && playlist.songs.length) === 1 &&
+                            "Сингл"}
+                        {(playlist.is_album && playlist.songs.length) > 1 &&
+                            `${playlist.songs.length} треков`}
+                    </Typography>
+                )}
             </Stack>
         </Stack>
     );

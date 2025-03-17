@@ -30,7 +30,6 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
     ({ filesInfo, handleEditFileFromMany, setFilesInfo }) => {
         const { modalsStore } = useStores();
         const [isLoading, setIsLoading] = useState(false);
-        const [allAuthor, setAllAuthor] = useState("");
 
         const handleUploadAllSongs = async () => {
             setIsLoading(true);
@@ -39,8 +38,12 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
                     filesInfo.map(async (fileInfo) => {
                         try {
                             if (fileInfo.uploaded) return;
-                            const { album, author, image_url, name } = fileInfo;
-                            let audioAuthor = author ? author : allAuthor;
+                            const { image_url, name } = fileInfo;
+                            let audioAuthor =
+                                modalsStore.playlistToAddTo?.owner.nickname ||
+                                "Администратор";
+                            let album =
+                                modalsStore.playlistToAddTo?.name || "Альбом";
                             if (!name) throw new Error("No name");
 
                             setFilesInfo((prevState) => {
@@ -86,12 +89,12 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
 
                             if (!song) return;
                             if (
-                                modalsStore.playlistToAddToId &&
+                                modalsStore.playlistToAddTo?.id &&
                                 song &&
                                 song.id
                             ) {
                                 await PlaylistQuieries.addSongToPlaylist(
-                                    modalsStore.playlistToAddToId,
+                                    modalsStore.playlistToAddTo?.id,
                                     song.id
                                 );
                             }
@@ -175,24 +178,10 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
                 justifyContent="center"
             >
                 <Stack width="330" height="360px" flexDirection="column">
-                    <TextField
-                        name="author"
-                        variant="standard"
-                        sx={{
-                            width: "100%",
-                            marginBottom: "10px",
-                            marginTop: "5px",
-                            height: "30px",
-                        }}
-                        placeholder="Автор всех аудио"
-                        value={allAuthor}
-                        onChange={(e) => setAllAuthor(e.target.value)}
-                    />
-
                     <Stack
                         overflow="auto"
                         width="100%"
-                        height="250px"
+                        height="280px"
                         paddingY="15px"
                         className="noScroll"
                         marginBottom="10px"

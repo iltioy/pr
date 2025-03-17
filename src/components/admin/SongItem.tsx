@@ -1,14 +1,14 @@
 import { Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-import { Category as CategoryType } from "../../types";
+import { Song as SongType } from "../../types";
 import { observer } from "mobx-react-lite";
-import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../../constants/admin";
+import { CAHRT_GLOBAL_TRENDS_NAME } from "../../constants/admin";
 
-interface CategoryItemProps {
-    category: CategoryType;
+interface SongItemProps {
+    song: SongType;
 }
 
-const CategoryItem = observer(({ category }: CategoryItemProps) => {
+const SongItem = observer(({ song }: SongItemProps) => {
     const navigate = useNavigate();
 
     return (
@@ -24,14 +24,12 @@ const CategoryItem = observer(({ category }: CategoryItemProps) => {
             marginTop="7px"
             color="text.primary"
             onClick={() =>
-                navigate(
-                    `/admin/${CAHRT_GLOBAL_CATEGORIES_NAME}/${category.id}`
-                )
+                navigate(`/admin/${CAHRT_GLOBAL_TRENDS_NAME}/${song.id}`)
             }
         >
-            <Typography variant="h5">{category.name}</Typography>
+            <Typography variant="h5">{song.name}</Typography>
         </Stack>
     );
 });
 
-export default CategoryItem;
+export default SongItem;

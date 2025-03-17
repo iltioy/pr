@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import CategoryItem from "../../../components/admin/CategoryItem";
 import { useQuery } from "react-query";
 import { useState } from "react";
@@ -15,15 +15,16 @@ import {
 } from "react-beautiful-dnd";
 import styled from "@emotion/styled";
 import ChartQueries from "../../../queries/charts";
-import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../../../constants/charts";
+import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../../../constants/admin";
+import { useNavigate } from "react-router";
 
 const Wrapper = styled.div`
     margin-bottom: 5px;
 `;
 
 const CategoriesList = observer(() => {
-    const chartName = "global-categories";
     const [categories, setCategories] = useState<Category[]>([]);
+    const navigate = useNavigate();
 
     useQuery(
         CAHRT_GLOBAL_CATEGORIES_NAME,
@@ -61,7 +62,10 @@ const CategoriesList = observer(() => {
             result.destination.index
         );
 
-        ChartQueries.reorderChartCategories(chartName, newCategories);
+        ChartQueries.reorderChartCategories(
+            CAHRT_GLOBAL_CATEGORIES_NAME,
+            newCategories
+        );
         setCategories(newCategories);
     }
 
@@ -82,11 +86,16 @@ const CategoriesList = observer(() => {
     return (
         <Stack>
             <AdminPageHeader
-                title="Мировые Чарты: Категории"
+                title="Чарты: Категории"
                 defaultValue={CAHRT_GLOBAL_CATEGORIES_NAME}
             />
 
-            <Stack overflow="auto" className="noscroll" marginTop="10px">
+            <Stack
+                overflow="auto"
+                maxHeight="600px"
+                className="noscroll"
+                marginY="10px"
+            >
                 <DragDropContext onDragEnd={onDragEnd}>
                     <Droppable droppableId="list" direction="vertical">
                         {(provided) => (
@@ -139,6 +148,9 @@ const CategoriesList = observer(() => {
                     <Typography variant="h6">+</Typography>
                 </Stack>
             </Stack>
+            <Box>
+                <Button onClick={() => navigate("/radio")}>На главную</Button>
+            </Box>
         </Stack>
     );
 });

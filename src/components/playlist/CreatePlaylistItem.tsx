@@ -6,107 +6,115 @@ import PlaylistQueries from "../../queries/playlists";
 import { observer } from "mobx-react-lite";
 import { Playlist } from "../../types";
 
-const CreatePlaylistItem = observer(() => {
-    const navigate = useNavigate();
+interface CreatePlaylistItemProps {
+    isAlbum?: boolean;
+}
 
-    const { isLoading, mutate: createPlaylist } = useMutation(
-        PlaylistQueries.createPlaylist,
-        {
-            onSuccess: (data) => {
-                const playlist: Playlist = data.data;
-                if (!playlist) return;
-                navigate(
-                    `/${playlist.owner?.username}/playlist/${playlist.id}/edit`
-                );
-            },
-        }
-    );
+const CreatePlaylistItem: React.FC<CreatePlaylistItemProps> = observer(
+    ({ isAlbum }) => {
+        const navigate = useNavigate();
 
-    return (
-        <Stack
-            sx={{
-                height: "290px",
-                width: "230px",
-                borderRadius: "5px",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "relative",
-                zIndex: 1,
-                ":hover .hoverPlaylistItem": {
-                    color: "#7E7F7F",
+        console.log("CreatePlaylistItem");
+
+        const { isLoading, mutate: createPlaylist } = useMutation(
+            PlaylistQueries.createPlaylist,
+            {
+                onSuccess: (data) => {
+                    const playlist: Playlist = data.data;
+                    if (!playlist) return;
+                    navigate(
+                        `/${playlist.owner?.username}/playlist/${playlist.id}/edit`
+                    );
                 },
-            }}
-            color="text.primary"
-        >
+            }
+        );
+
+        return (
             <Stack
                 sx={{
-                    height: "260px",
-                    width: "220px",
+                    height: "290px",
+                    width: "230px",
+                    borderRadius: "5px",
+                    justifyContent: "center",
                     alignItems: "center",
-                    flexDirection: "column",
+                    position: "relative",
+                    zIndex: 1,
+                    ":hover .hoverPlaylistItem": {
+                        color: "#7E7F7F",
+                    },
                 }}
+                color="text.primary"
             >
                 <Stack
                     sx={{
-                        height: "200px",
-                        width: "200px",
-                        marginBottom: "5px",
-                        position: "relative",
-                        backgroundColor: "#F6F8F9",
-                        cursor: isLoading ? "" : "pointer",
-                    }}
-                    onClick={() => {
-                        if (!isLoading) {
-                            createPlaylist();
-                        }
+                        height: "260px",
+                        width: "220px",
+                        alignItems: "center",
+                        flexDirection: "column",
                     }}
                 >
                     <Stack
-                        className="hoverPlaylistItem"
                         sx={{
-                            position: "absolute",
-                            zIndex: 3,
-                            top: 0,
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            color: "#C3C5C6",
+                            height: "200px",
+                            width: "200px",
+                            marginBottom: "5px",
+                            position: "relative",
+                            backgroundColor: "#F6F8F9",
+                            cursor: isLoading ? "" : "pointer",
+                        }}
+                        onClick={() => {
+                            if (!isLoading) {
+                                createPlaylist(isAlbum);
+                            }
                         }}
                     >
-                        <>
-                            <Stack
-                                width="100%"
-                                justifyContent="center"
-                                alignItems="center"
-                                flexDirection="row"
-                                gap="10px"
-                            >
+                        <Stack
+                            className="hoverPlaylistItem"
+                            sx={{
+                                position: "absolute",
+                                zIndex: 3,
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                color: "#C3C5C6",
+                            }}
+                        >
+                            <>
                                 <Stack
-                                    sx={{
-                                        width: "55px",
-                                        height: "55px",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        transition: "0.6s",
-                                    }}
+                                    width="100%"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    flexDirection="row"
+                                    gap="10px"
                                 >
-                                    <AddIcon
+                                    <Stack
                                         sx={{
-                                            width: "70px",
-                                            height: "70px",
+                                            width: "55px",
+                                            height: "55px",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            transition: "0.6s",
                                         }}
-                                    />
+                                    >
+                                        <AddIcon
+                                            sx={{
+                                                width: "70px",
+                                                height: "70px",
+                                            }}
+                                        />
+                                    </Stack>
                                 </Stack>
-                            </Stack>
-                        </>
+                            </>
+                        </Stack>
                     </Stack>
                 </Stack>
             </Stack>
-        </Stack>
-    );
-});
+        );
+    }
+);
 
 export default CreatePlaylistItem;

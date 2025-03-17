@@ -10,12 +10,14 @@ import {
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CloseIcon from "@mui/icons-material/Close";
 import { Playlist, Song } from "../types";
 import { SxProps, Theme } from "@mui/material";
 import useMenu from "../hooks/useMenu";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../root-store-context";
 import SongsQuieries from "../queries/songs";
+import PlaylistsQuieries from "../queries/playlists";
 import { FRONTEND_URL } from "../config";
 import { useSnackbar } from "notistack";
 import useCopy from "../hooks/useCopy";
@@ -26,10 +28,21 @@ interface SongRecordProps {
     sx?: SxProps<Theme> | undefined;
     search?: boolean;
     songContext?: Playlist;
+    isEdit?: boolean;
+    invalidate?: string;
+    isAlbum?: boolean;
 }
 
 const SongRecord = observer(
-    ({ song, sx, search, songContext }: SongRecordProps) => {
+    ({
+        song,
+        sx,
+        search,
+        songContext,
+        isEdit,
+        invalidate,
+        isAlbum,
+    }: SongRecordProps) => {
         const {
             handleClose: handleCloseSongSettings,
             handleOpen: handleOpenSongSettings,
@@ -37,8 +50,17 @@ const SongRecord = observer(
             anchorElement: songSettingsAnchorElement,
         } = useMenu();
 
-        const { songsStore } = useStores();
+        const { songsStore, modalsStore } = useStores();
         const { copy } = useCopy(`${FRONTEND_URL}/playlist/song/${song.id}`);
+
+        const handleRemove = async () => {
+            if (!songContext) return;
+
+            await PlaylistsQuieries.removeSongFromPlaylist(
+                songContext.id,
+                song.id
+            );
+        };
 
         return (
             <>
@@ -59,6 +81,11 @@ const SongRecord = observer(
                         ...sx,
                     }}
                     onClick={() => {
+                        if (isEdit) {
+                            modalsStore.toggleSongUpdateModal(song, invalidate);
+                            return;
+                        }
+
                         songsStore.setCurrentSong(song, false);
                         if (songContext) {
                             songsStore.setSongQueue(songContext);
@@ -116,7 +143,7 @@ const SongRecord = observer(
                             paddingRight="10px"
                             item
                         >
-                            {song.album?.slice(0, 30)}
+                            {!isAlbum && song.album?.slice(0, 30)}
                         </Grid>
 
                         <Grid
@@ -135,9 +162,7 @@ const SongRecord = observer(
                                 display="flex"
                                 alignItems="center"
                             >
-                                {songsStore.liked_songs_ids?.includes(
-                                    song.id
-                                ) ? (
+                                {!isEdit && (
                                     <IconButton
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -146,39 +171,58 @@ const SongRecord = observer(
                                             );
                                         }}
                                     >
-                                        <FavoriteIcon
-                                            htmlColor={`${search && "white"}`}
-                                        />
-                                    </IconButton>
-                                ) : (
-                                    <IconButton
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            SongsQuieries.toggleLikeSong(
-                                                song.id
-                                            );
-                                        }}
-                                    >
-                                        <FavoriteBorderIcon
-                                            htmlColor={`${search && "white"}`}
-                                        />
+                                        {songsStore.liked_songs_ids?.includes(
+                                            song.id
+                                        ) ? (
+                                            <FavoriteIcon
+                                                htmlColor={`${
+                                                    search && "white"
+                                                }`}
+                                            />
+                                        ) : (
+                                            <FavoriteBorderIcon
+                                                htmlColor={`${
+                                                    search && "white"
+                                                }`}
+                                            />
+                                        )}
                                     </IconButton>
                                 )}
 
-                                <IconButton
-                                    sx={{
-                                        marginLeft: "15px",
-                                    }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleOpenSongSettings &&
-                                            handleOpenSongSettings(e);
-                                    }}
-                                >
-                                    <MoreVertIcon
-                                        htmlColor={`${search && "white"}`}
-                                    />
-                                </IconButton>
+                                {isEdit ? (
+                                    <>
+                                        <IconButton
+                                            sx={{
+                                                marginLeft: "15px",
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleRemove();
+                                            }}
+                                        >
+                                            <CloseIcon />
+                                        </IconButton>
+                                    </>
+                                ) : (
+                                    <>
+                                        <IconButton
+                                            sx={{
+                                                marginLeft: "15px",
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleOpenSongSettings &&
+                                                    handleOpenSongSettings(e);
+                                            }}
+                                        >
+                                            <MoreVertIcon
+                                                htmlColor={`${
+                                                    search && "white"
+                                                }`}
+                                            />
+                                        </IconButton>
+                                    </>
+                                )}
                             </Box>
                         </Grid>
                     </Grid>
@@ -195,8 +239,17 @@ const SongRecord = observer(
                         horizontal: "center",
                         vertical: "top",
                     }}
+                    sx={{
+                        zIndex: 10,
+                    }}
                 >
-                    <MenuItem>Скачать</MenuItem>
+                    <MenuItem
+                        onClick={() =>
+                            modalsStore.toggleSongAddToPlaylistModal(song)
+                        }
+                    >
+                        Добавить
+                    </MenuItem>
                     <MenuItem onClick={copy}>Экспорт</MenuItem>
                 </Menu>
             </>

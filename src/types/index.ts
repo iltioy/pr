@@ -46,6 +46,7 @@ export interface Playlist {
     owner: User;
     order: number;
     songs: Song[];
+    is_album?: boolean;
 }
 
 export interface User {
@@ -54,6 +55,7 @@ export interface User {
     username?: string;
     role?: string;
     image_url?: string;
+    nickname?: string;
 }
 
 export interface CreateSongBody {
@@ -73,4 +75,5 @@ export interface Category {
 
 export interface Chart {
     categories: Category[];
+    playlist?: Playlist;
 }

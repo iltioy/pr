@@ -30,6 +30,7 @@ class UserStore {
 
     setUserInfo(data: User) {
         this.user = {
+            id: data.id,
             email: data.email,
             image_url: data.image_url,
             role: data.role,

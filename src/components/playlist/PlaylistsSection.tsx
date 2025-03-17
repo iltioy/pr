@@ -10,13 +10,11 @@ interface PlaylistsSectionProps {
     title: string;
     playlists: Playlist[];
     isOwnedPlaylists?: boolean;
+    isAlbum?: boolean;
 }
 
 const PlaylistsSection: React.FC<PlaylistsSectionProps> = observer(
-    ({ title, playlists, isOwnedPlaylists }) => {
-        const { username } = useParams();
-        const { userStore } = useStores();
-
+    ({ title, playlists, isOwnedPlaylists, isAlbum }) => {
         return (
             <>
                 <Stack
@@ -44,12 +42,14 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = observer(
                         />
 
                         <Grid container spacing={2}>
+                            {playlists.length === 0 && (
+                                <Grid item key="createPlaylistItem">
+                                    <CreatePlaylistItem isAlbum={isAlbum} />
+                                </Grid>
+                            )}
+
                             {playlists.map((playlist, index) => {
-                                if (
-                                    index === 0 &&
-                                    isOwnedPlaylists &&
-                                    username === userStore.user.username
-                                ) {
+                                if (index === 0 && isOwnedPlaylists) {
                                     return (
                                         <>
                                             <Grid item key={index}>
@@ -58,7 +58,9 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = observer(
                                                 />
                                             </Grid>
                                             <Grid item key="createPlaylistItem">
-                                                <CreatePlaylistItem />
+                                                <CreatePlaylistItem
+                                                    isAlbum={isAlbum}
+                                                />
                                             </Grid>
                                         </>
                                     );

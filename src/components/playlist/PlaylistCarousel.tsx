@@ -41,6 +41,7 @@ interface PlaylistCarouselProps {
     playlists: Playlist[];
     title?: string;
     isOwnedPlaylists?: boolean;
+    isAlbum?: boolean;
 }
 
 const responsive = {
@@ -105,10 +106,8 @@ const ButtonGroup = observer(
 );
 
 const PlaylistCarousel: React.FC<PlaylistCarouselProps> = observer(
-    ({ playlists, title, isOwnedPlaylists }) => {
-        const { username } = useParams();
-        const { userStore } = useStores();
-
+    ({ playlists, title, isOwnedPlaylists, isAlbum }) => {
+        console.log(isOwnedPlaylists);
         return (
             <>
                 <Stack width="100%" flexDirection="column" color="text.primary">
@@ -131,10 +130,9 @@ const PlaylistCarousel: React.FC<PlaylistCarouselProps> = observer(
                             <PlaylistItem playlist={playlists[0]} />
                         )}
 
-                        {isOwnedPlaylists &&
-                            username === userStore.user.username && (
-                                <CreatePlaylistItem />
-                            )}
+                        {isOwnedPlaylists && (
+                            <CreatePlaylistItem isAlbum={isAlbum} />
+                        )}
 
                         {playlists.map((playlist, index) => {
                             if (index === 0) return;

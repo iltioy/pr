@@ -93,7 +93,6 @@ const EditPlaylistPage = observer(() => {
 
                 <Stack flexDirection="column">
                     <EditPlaylistHeader
-                        // playlist={playlist}
                         isLoading={isLoading}
                         playlist={playlist}
                         playlistName={playlistName}
@@ -103,24 +102,13 @@ const EditPlaylistPage = observer(() => {
                         handleSaveChanges={handleSaveChanges}
                     />
 
-                    <PlaylistSongs isEdit data={songs} isLoading={isLoading} />
+                    <PlaylistSongs
+                        playlist={playlist}
+                        isEdit
+                        data={songs}
+                        isLoading={isLoading}
+                    />
                 </Stack>
-                {/* <Menu
-        open={isPlaylistSettingOpen}
-        anchorEl={playlistSettingsAnchorElement}
-        onClose={handleClosePlaylistSettings}
-        anchorOrigin={{
-          horizontal: "center",
-          vertical: "bottom",
-        }}
-        transformOrigin={{
-          horizontal: "center",
-          vertical: "top",
-        }}
-      >
-        <MenuItem>Скачать</MenuItem>
-        <MenuItem>Экспорт</MenuItem>
-      </Menu> */}
             </Stack>
         </>
     );

@@ -15,6 +15,7 @@ const CreatePlaylistTableItem: React.FC = observer(() => {
             onSuccess: (data) => {
                 const playlist: Playlist = data.data;
                 if (!playlist) return;
+
                 navigate(
                     `/${playlist.owner?.username}/playlist/${playlist.id}/edit`
                 );
@@ -39,7 +40,7 @@ const CreatePlaylistTableItem: React.FC = observer(() => {
             color="text.primary"
             onClick={() => {
                 if (!isLoading) {
-                    createPlaylist();
+                    createPlaylist(true);
                 }
             }}
         >

@@ -5,6 +5,8 @@ import songsStore from "./songs-store";
 class PlaylistsStore {
     added_playlists: Playlist[] = [];
     liked_playlists: Playlist[] = [];
+    albums: Playlist[] = [];
+    liked_albums: Playlist[] = [];
 
     user_added_playlists: Playlist[] = [];
     user_liked_playlists: Playlist[] = [];
@@ -22,14 +24,16 @@ class PlaylistsStore {
         const added_playlists: Playlist[] | undefined = data?.added_playlists;
         if (!added_playlists) return;
 
-        this.added_playlists = added_playlists;
+        this.added_playlists = added_playlists.filter((el) => !el.is_album);
+        this.albums = added_playlists.filter((el) => el.is_album);
     }
 
     setLikedPlaylists(data: any) {
         const liked_playlists: Playlist[] | undefined = data?.liked_playlists;
         if (!liked_playlists) return;
 
-        this.liked_playlists = liked_playlists;
+        this.liked_playlists = liked_playlists.filter((el) => !el.is_album);
+        this.liked_albums = liked_playlists.filter((el) => el.is_album);
     }
 
     setUserPlaylists(data: any) {

@@ -112,15 +112,33 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                                 )
                             }
                         >
-                            Мои плейлисты
+                            Коллекция
                         </Button>
 
-                        <Button
-                            color="inherit"
-                            onClick={() => modalsStore.toggleSongUploadModal()}
-                        >
-                            Загрузить трек
-                        </Button>
+                        {(userStore.user.role === "artist" ||
+                            userStore.user.role === "admin") && (
+                            <>
+                                <Button
+                                    color="inherit"
+                                    onClick={() =>
+                                        navigate(
+                                            `/artist/${userStore.user.username}`
+                                        )
+                                    }
+                                >
+                                    Страница артиста
+                                </Button>
+                            </>
+                        )}
+
+                        {userStore.user.role === "admin" && (
+                            <Button
+                                color="inherit"
+                                onClick={() => navigate(`/admin`)}
+                            >
+                                Админка
+                            </Button>
+                        )}
                     </Stack>
 
                     <Stack

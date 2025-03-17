@@ -3,7 +3,7 @@ import { useSnackbar } from "notistack";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router";
 import { appQueryClient as queryClient } from "..";
-import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../constants/charts";
+import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../constants/admin";
 import ChartQueries from "../queries/charts";
 
 export const useCreateCategoryForChart = () => {
@@ -71,7 +71,7 @@ export const useDeleteCategory = (categoryId: number | string) => {
                 autoHideDuration: 3000,
             });
             queryClient.invalidateQueries("categories");
-            navigate("/admin/categories");
+            navigate(`/admin/${CAHRT_GLOBAL_CATEGORIES_NAME}`);
         },
     });
 };

@@ -4,6 +4,7 @@ import { FileInfo } from "../components/modals/SongUploadModal/SongUploadModal";
 import { Song } from "../types";
 import songsStore from "../stores/songs-store";
 import playlistsStore from "../stores/playlists-store";
+import { UpdateSongInfoProps } from "../components/modals/SongEdit/SongEditModal";
 
 export interface UploadSongData {
     name: string;
@@ -67,6 +68,28 @@ class SongsQueries {
                     album: uploadInfo.album,
                     image_key: uploadInfo.image_key,
                     image_url: uploadInfo.image_url,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userStore.access_token}`,
+                    },
+                }
+            );
+
+            const song: Song = res.data;
+            return song;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    updateSong = async (updateSongInfo: UpdateSongInfoProps) => {
+        try {
+            const res = await axios.patch(
+                `/songs/update/${updateSongInfo.id}`,
+                {
+                    name: updateSongInfo.name,
+                    image_url: updateSongInfo.image_url,
                 },
                 {
                     headers: {

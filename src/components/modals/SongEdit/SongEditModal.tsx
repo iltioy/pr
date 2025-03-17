@@ -1,132 +1,112 @@
-import {
-    Stack,
-    Typography,
-    TextField,
-    Button,
-    Box,
-    FormLabel,
-} from "@mui/material";
+import { Box, FormLabel, Stack, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import { useState } from "react";
+import { observer } from "mobx-react-lite";
+import { useStores } from "../../../root-store-context";
 import { Song } from "../../../types";
 import FilesQueries from "../../../queries/files";
 import SongsQueries from "../../../queries/songs";
-import { observer } from "mobx-react-lite";
-import { useStores } from "../../../root-store-context";
 import { useFormik } from "formik";
-import PlaylistQueries from "../../../queries/playlists";
-import path from "path-browserify";
-import { FileInfo, newFileInfo } from "./SongUploadModal";
+import { useState } from "react";
 import { useSnackbar } from "notistack";
+import { useQueryClient } from "react-query";
 
-const DEFAULT_MUSIC_IMAGE_URL =
-    "https://sun6-23.userapi.com/s/v1/ig2/fCU0l_DjmTovIKbT969SqRNxQpBkl8_l00z0vPJY-tOy2vHwd9eY7rGCloekqrGzgLvANYSf886sRaMsTBDM2Blr.jpg?size=1068x1068&quality=95&crop=4,0,1068,1068&ava=1";
-
-interface SongUploadFormProps {
-    fileInfo?: FileInfo;
-    setError?: React.Dispatch<React.SetStateAction<string>>;
-    multipleFiles?: boolean;
-    handleGoBackFormEditing?: (newFileInfo: newFileInfo) => void;
-}
-
-export interface UploadSongInfoProps {
+export interface UpdateSongInfoProps {
     name: string;
-    author: string;
-    album: string;
+    id: string | number;
+    image_url: string;
 }
 
-const SongUploadForm: React.FC<SongUploadFormProps> = observer(
-    ({ fileInfo, setError, multipleFiles, handleGoBackFormEditing }) => {
-        const [songImage, setSongImage] = useState<string>(
-            fileInfo?.image_url || ""
-        );
-        const [isLoading, setIsLoading] = useState(false);
-        const { modalsStore } = useStores();
+const SongEditModal = observer(() => {
+    const { modalsStore } = useStores();
 
-        const { enqueueSnackbar } = useSnackbar();
+    const song = modalsStore.songToEdit;
+    const [isLoading, setIsLoading] = useState(false);
+    const [songImage, setSongImage] = useState<string>(song.image_url);
 
-        const handleUploadSong = async (info: UploadSongInfoProps) => {
-            setIsLoading(true);
-            try {
-                const uploadInfo = {
-                    name: info.name,
-                    author:
-                        modalsStore.playlistToAddTo?.owner.nickname ||
-                        "Администратор",
-                    album: modalsStore.playlistToAddTo?.name,
-                    image_url: songImage,
-                };
+    const queryClient = useQueryClient();
 
-                const song = await SongsQueries.uploadSong(
-                    uploadInfo,
-                    fileInfo
-                );
+    const { enqueueSnackbar } = useSnackbar();
 
-                if (!song) return;
+    const handleUploadSong = async (info: UpdateSongInfoProps) => {
+        setIsLoading(true);
+        try {
+            await SongsQueries.updateSong(info);
 
-                if (modalsStore.playlistToAddTo && song && song.id) {
-                    await PlaylistQueries.addSongToPlaylist(
-                        modalsStore.playlistToAddTo.id,
-                        song.id
-                    );
-                }
+            enqueueSnackbar("Аудио успешно обновлено!", {
+                variant: "success",
+                autoHideDuration: 3000,
+            });
 
-                enqueueSnackbar("Аудио успешно загружено!", {
-                    variant: "success",
-                    autoHideDuration: 3000,
-                });
-
-                if (multipleFiles && handleGoBackFormEditing) {
-                    handleGoBackFormEditing({
-                        name: song.name,
-                        author: song.author,
-                        uploaded: true,
-                        image_url: songImage,
-                        album: song.album,
-                        file: fileInfo?.file,
-                    });
-                } else {
-                    modalsStore.toggleSongUploadModal();
-                }
-            } catch (error) {
-                if (setError) {
-                    setIsLoading(false);
-                    setError("Не удалось загрузить аудио!");
-                }
-                console.log(error);
+            if (modalsStore.invalidate) {
+                queryClient.invalidateQueries(modalsStore.invalidate);
             }
-        };
 
-        const songCreateFormik = useFormik({
-            initialValues: {
-                name: fileInfo?.name
-                    ? fileInfo.name
-                    : fileInfo?.file
-                    ? path.parse(fileInfo.file.name).name
-                    : "",
-                author: fileInfo?.author || "",
-                album: fileInfo?.album || "",
-            },
-            onSubmit: async (values) => {
-                const info = {
-                    name: values.name,
-                    author: values.author,
-                    album: values.album,
-                };
+            modalsStore.toggleSongUpdateModal();
+        } catch (error) {
+            enqueueSnackbar("Ошибка при обновлении аудио!", {
+                variant: "error",
+                autoHideDuration: 3000,
+            });
 
-                handleUploadSong(info);
-            },
-        });
+            console.log(error);
+        }
+    };
 
-        const handleUpladSongImage = async (file: File) => {
-            const image = await FilesQueries.handleUploadImage(file);
-            if (!image) return;
-            setSongImage(image);
-        };
+    const songUpdateFormik = useFormik({
+        initialValues: {
+            name: song.name,
+            author: song.author,
+            album: song.album,
+        },
+        onSubmit: async (values) => {
+            const info: UpdateSongInfoProps = {
+                name: values.name,
+                id: song.id,
+                image_url: songImage,
+            };
 
-        return (
-            <>
+            handleUploadSong(info);
+        },
+    });
+
+    const handleUpladSongImage = async (file: File) => {
+        const image = await FilesQueries.handleUploadImage(file);
+        if (!image) return;
+        setSongImage(image);
+    };
+
+    return (
+        <>
+            <Stack
+                position="absolute"
+                color="text.primary"
+                // bottom="0px"
+                width="100%"
+                height="100%"
+                top="0"
+                bottom="0"
+                left="0"
+                right="0"
+                bgcolor="rgb(0,0,0)"
+                zIndex={20}
+                overflow="hidden"
+                sx={{
+                    opacity: 0.7,
+                }}
+            />
+
+            <Stack
+                position="absolute"
+                width="100%"
+                height="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                zIndex={21}
+                onClick={() => modalsStore.toggleSongUpdateModal()}
+                color="text.primary"
+            >
                 <Stack
                     width="400px"
                     height="180px"
@@ -139,7 +119,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                     <Stack width="350px" flexDirection="column">
                         <form
                             action=""
-                            onSubmit={songCreateFormik.handleSubmit}
+                            onSubmit={songUpdateFormik.handleSubmit}
                         >
                             <Stack
                                 height="75px"
@@ -204,9 +184,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                                     </label>
 
                                     <img
-                                        src={`${
-                                            songImage || DEFAULT_MUSIC_IMAGE_URL
-                                        }`}
+                                        src={`${songImage}`}
                                         style={{
                                             height: "75px",
                                             width: "75px",
@@ -216,7 +194,6 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                                 </Stack>
 
                                 <Stack flexDirection="column">
-                                    {/* <FormLabel>Название:</FormLabel> */}
                                     <TextField
                                         sx={{
                                             width: "220px",
@@ -224,8 +201,8 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                                         name="name"
                                         variant="standard"
                                         placeholder="Название аудио"
-                                        value={songCreateFormik.values.name}
-                                        onChange={songCreateFormik.handleChange}
+                                        value={songUpdateFormik.values.name}
+                                        onChange={songUpdateFormik.handleChange}
                                     />
                                     <Typography
                                         noWrap
@@ -234,35 +211,12 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                                         marginTop="10px"
                                         maxWidth="200px"
                                     >
-                                        {fileInfo?.file?.name}
+                                        {song.name}
                                     </Typography>
                                 </Stack>
                             </Stack>
 
                             <Stack flexDirection="row" marginTop="10px">
-                                {multipleFiles && handleGoBackFormEditing && (
-                                    <Box marginRight="10px">
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => {
-                                                const { album, author, name } =
-                                                    songCreateFormik.values;
-                                                handleGoBackFormEditing({
-                                                    author,
-                                                    name,
-                                                    uploaded: false,
-                                                    album,
-                                                    image_url: songImage,
-                                                    file: fileInfo?.file,
-                                                });
-                                            }}
-                                        >
-                                            Назад
-                                        </Button>
-                                    </Box>
-                                )}
-
                                 <Box>
                                     <LoadingButton
                                         loading={isLoading}
@@ -277,9 +231,9 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                         </form>
                     </Stack>
                 </Stack>
-            </>
-        );
-    }
-);
+            </Stack>
+        </>
+    );
+});
 
-export default SongUploadForm;
+export default SongEditModal;

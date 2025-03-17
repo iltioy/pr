@@ -26,13 +26,14 @@ interface PlaylistSongsProps {
 interface SongListProps {
     data: Song[];
     playlist?: Playlist;
+    isEdit?: boolean;
 }
 
 const PlaylistWrapper = styled.div`
     margin-bottom: 5px;
 `;
 
-const SongList = observer(({ data, playlist }: SongListProps) => {
+const SongList = observer(({ data, playlist, isEdit }: SongListProps) => {
     const [state, setState] = useState<Song[]>([]);
 
     useEffect(() => {
@@ -70,7 +71,7 @@ const SongList = observer(({ data, playlist }: SongListProps) => {
         return result;
     };
 
-    if (playlist?.owner.username !== userStore.user.username) {
+    if (playlist?.owner.id !== userStore.user.id) {
         return (
             <>
                 {data.map((song: Song, index: number) => {
@@ -78,7 +79,9 @@ const SongList = observer(({ data, playlist }: SongListProps) => {
                         <SongRecord
                             songContext={playlist}
                             song={song}
+                            isEdit={isEdit}
                             key={index}
+                            isAlbum={playlist?.is_album}
                         />
                     );
                 })}
@@ -108,6 +111,8 @@ const SongList = observer(({ data, playlist }: SongListProps) => {
                                                 songContext={playlist}
                                                 song={song}
                                                 key={index}
+                                                isEdit={isEdit}
+                                                isAlbum={playlist?.is_album}
                                             />
                                         </PlaylistWrapper>
                                     )}
@@ -160,43 +165,22 @@ const PlaylistSongs = observer(
                                 <Grid item xs={12} md={6}>
                                     Название
                                 </Grid>
-                                <Grid
-                                    item
-                                    md="auto"
-                                    display={{ xs: "none", md: "block" }}
-                                >
-                                    Альбом
-                                </Grid>
+                                {!playlist?.is_album && (
+                                    <Grid
+                                        item
+                                        md="auto"
+                                        display={{ xs: "none", md: "block" }}
+                                    >
+                                        Альбом
+                                    </Grid>
+                                )}
                             </>
                         ) : null}
                     </Grid>
 
-                    {isEdit && <AddSongItem />}
-
-                    {/* {isLoading
-                        ? Array.from(Array(10).keys()).map((el, index) => {
-                              return (
-                                  <Skeleton
-                                      key={index}
-                                      component="div"
-                                      variant="rounded"
-                                      height="74px"
-                                      width="100%"
-                                      sx={{
-                                          marginBottom: "5px",
-                                      }}
-                                  />
-                              );
-                          })
-                        : data.map((song: SongType, index: number) => {
-                              return (
-                                  <SongRecord
-                                      songContext={playlist}
-                                      song={song}
-                                      key={index}
-                                  />
-                              );
-                          })} */}
+                    {isEdit && playlist?.is_album && (
+                        <AddSongItem playlist={playlist} />
+                    )}
 
                     {isLoading ? (
                         Array.from(Array(10).keys()).map((el, index) => {
@@ -214,9 +198,18 @@ const PlaylistSongs = observer(
                             );
                         })
                     ) : isSongPage && data && data[0] ? (
-                        <SongRecord songContext={playlist} song={data[0]} />
+                        <SongRecord
+                            isEdit={isEdit}
+                            songContext={playlist}
+                            song={data[0]}
+                            isAlbum={playlist?.is_album}
+                        />
                     ) : (
-                        <SongList data={data} playlist={playlist} />
+                        <SongList
+                            isEdit={isEdit}
+                            data={data}
+                            playlist={playlist}
+                        />
                     )}
                 </Stack>
             </Stack>
