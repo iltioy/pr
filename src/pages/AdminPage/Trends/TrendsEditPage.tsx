@@ -51,17 +51,32 @@ const TrendsEditPage = observer(() => {
                 return data.data;
             },
             onSuccess: (data) => {
-                if (!data || !data.playlist) return;
-                setPlaylist(data.playlist);
-                setSongs(data.playlist.songs);
+                if (
+                    !data ||
+                    !data.categories ||
+                    !data.categories[0] ||
+                    !data.categories[0].playlists ||
+                    !data.categories[0].playlists[0]
+                )
+                    return;
+                setPlaylist(data.categories[0].playlists[0]);
+                setSongs(data.categories[0].playlists[0].songs);
             },
             onError: async () => {
                 const newChart = await ChartQueries.createChart(
                     CAHRT_GLOBAL_TRENDS_NAME
                 );
-                if (!newChart || !newChart.playlist) return;
-                setPlaylist(newChart.playlist);
-                setSongs(newChart.playlist.songs);
+                if (
+                    !newChart ||
+                    !newChart.categories ||
+                    !newChart.categories[0] ||
+                    !newChart.categories[0].playlists ||
+                    !newChart.categories[0].playlists[0]
+                )
+                    return;
+
+                setPlaylist(newChart.categories[0].playlists[0]);
+                setSongs(newChart.categories[0].playlists[0].songs);
             },
         }
     );

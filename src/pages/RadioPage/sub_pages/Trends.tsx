@@ -39,7 +39,7 @@ const Trends = observer(() => {
                 </Typography>
 
                 <Stack flexDirection="column" width="100%">
-                    {chart?.playlist?.songs.map((song) => {
+                    {chart?.categories[0]?.playlists[0]?.songs?.map((song) => {
                         return (
                             <SongRecord
                                 key={song.id}

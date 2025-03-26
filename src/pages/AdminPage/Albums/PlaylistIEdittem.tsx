@@ -40,7 +40,7 @@ const PlaylistEditItem: React.FC<PlaylistTableItemProps> = observer(
                             color="text.secondary"
                             marginRight="5px"
                         >
-                            {`${playlist.owner.nickname} `}
+                            {`${playlist.owner.username} `}
                         </Typography>
 
                         <Typography
