@@ -119,7 +119,7 @@ const AlbumsEditPage = observer(() => {
         <Stack>
             <AdminPageHeader
                 title="Чарты: Альбомы"
-                defaultValue={CAHRT_GLOBAL_TRENDS_NAME}
+                defaultValue={CAHRT_GLOBAL_ALBUMS_NAME}
             />
             <Stack
                 overflow="auto"
