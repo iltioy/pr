@@ -18,6 +18,7 @@ import PlaylistImage from "../../components/playlist/PlaylistImage";
 import { useStores } from "../../root-store-context";
 import { useNavigate, useParams } from "react-router";
 import PlaylistQueries from "../../queries/playlists";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 interface PlaylistHeaderProps {
     playlist?: Playlist;
@@ -36,6 +37,7 @@ const PlaylistHeader = observer(
         isSongPlaylist,
     }: PlaylistHeaderProps) => {
         const theme = useTheme();
+        const { t } = useLocalization();
         const navigate = useNavigate();
         const { username } = useParams();
 
@@ -263,7 +265,7 @@ const PlaylistHeader = observer(
                                 }}
                             >
                                 <PressableButton
-                                    text="Перемешать"
+                                    text={t('shuffle')}
                                     icon="play"
                                 />
                             </Box>

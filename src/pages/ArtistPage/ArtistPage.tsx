@@ -11,10 +11,12 @@ import axios from "axios";
 import Navbar from "../../components/Navbar";
 import { User } from "../../types";
 import { useState } from "react";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 const ArtistHeader = observer(() => {
     const { playlistsStore, userStore } = useStores();
     const { artistName: defaultUsername } = useParams();
+    const { t } = useLocalization();
 
     const [username, setUsername] = useState(defaultUsername);
 
@@ -76,7 +78,7 @@ const ArtistHeader = observer(() => {
                             userStore.user.id === user?.id) && (
                             <PlaylistCarousel
                                 playlists={playlistsStore.albums}
-                                title="Альбомы"
+                                title={t('albums')}
                                 isOwnedPlaylists={
                                     userStore.user.id === user?.id
                                 }
@@ -99,7 +101,7 @@ const ArtistHeader = observer(() => {
                             userStore.user.id === user?.id) && (
                             <PlaylistsSection
                                 playlists={playlistsStore.albums}
-                                title="Альбомы"
+                                title={t('albums')}
                                 isOwnedPlaylists={
                                     userStore.user.id === user?.id
                                 }

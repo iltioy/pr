@@ -15,12 +15,14 @@ import useCopy from "../../hooks/useCopy";
 import PlaylistQueries from "../../queries/playlists";
 import { enqueueSnackbar } from "notistack";
 import ConfirmationModal from "../../components/modals/ConfirmationModal";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 const PlaylistPage = observer(() => {
     const { playlistId } = useParams();
     const [songs, setSongs] = useState<Song[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigage = useNavigate();
+    const { t } = useLocalization();
 
     const extractSongsFromOrderdSongs = (playlist?: Playlist) => {
         if (!playlist) return;
@@ -53,7 +55,7 @@ const PlaylistPage = observer(() => {
         },
         {
             onSuccess: () => {
-                enqueueSnackbar(`Плейлист ${playlist?.name} удалён!`, {
+                enqueueSnackbar(`${t('playlistDeleted')} ${playlist?.name}!`, {
                     variant: "success",
                     autoHideDuration: 3000,
                 });
@@ -63,7 +65,7 @@ const PlaylistPage = observer(() => {
     );
 
     const { copy } = useCopy(
-        `${FRONTEND_URL}/${playlist?.owner.username}/playlist/${playlist?.id}`
+        `${FRONTEND_URL}/${playlist?.owner?.username}/playlist/${playlist?.id}`
     );
 
     const {
@@ -109,23 +111,23 @@ const PlaylistPage = observer(() => {
                     vertical: "top",
                 }}
             >
-                <MenuItem>Скачать</MenuItem>
-                <MenuItem onClick={copy}>Экспорт</MenuItem>
+                <MenuItem>{t('download')}</MenuItem>
+                <MenuItem onClick={copy}>{t('export')}</MenuItem>
                 <MenuItem onClick={() => setIsModalOpen(true)}>
-                    Удалить
+                    {t('delete')}
                 </MenuItem>
             </Menu>
 
             <ConfirmationModal
-                cancelText="Отменить"
+                cancelText={t('cancel')}
                 confirmationAction={() => {
                     deletePalylist();
                     setIsModalOpen(false);
                 }}
-                confirmationText="Удалить"
+                confirmationText={t('delete')}
                 open={isModalOpen}
                 setOpen={setIsModalOpen}
-                modalText="Удалить этот Плейлист?"
+                modalText={t('deletePlaylist')}
             />
         </Stack>
     );

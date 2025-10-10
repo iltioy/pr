@@ -7,25 +7,27 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { useStores } from "../../root-store-context";
 import { observer } from "mobx-react-lite";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
-const registerValidationSchema = yup.object({
+const createRegisterValidationSchema = (t: (key: any) => string) => yup.object({
   email: yup
     .string()
-    .email("Введите адрес электронной почты")
-    .required("Введите адрес электронной почты"),
+    .email(t('enterValidEmail'))
+    .required(t('enterValidEmail')),
   password: yup
     .string()
-    .min(8, "Пароль должен содержать минимум 8 символов")
-    .required("Введите пароль"),
+    .min(8, t('passwordMinLength'))
+    .required(t('enterPassword')),
   confirmationPassword: yup
     .string()
-    .oneOf([yup.ref("password")], "Пароли должны совпадать")
-    .required("Введите пароль ещё раз"),
+    .oneOf([yup.ref("password")], t('passwordsMustMatch'))
+    .required(t('enterPasswordAgain')),
 });
 
 const RegisterForm = observer(() => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLocalization();
 
   const { authStore } = useStores();
 
@@ -35,7 +37,7 @@ const RegisterForm = observer(() => {
       password: "",
       confirmationPassword: "",
     },
-    validationSchema: registerValidationSchema,
+    validationSchema: createRegisterValidationSchema(t),
     onSubmit: async (values, { setErrors }) => {
       setIsLoading(true);
 
@@ -54,7 +56,7 @@ const RegisterForm = observer(() => {
         setIsLoading(false);
         if (error?.response?.status === 403) {
           setErrors({
-            email: "Данный адрес уже используется!",
+            email: t('emailAlreadyUsed'),
           });
         }
       }
@@ -64,12 +66,12 @@ const RegisterForm = observer(() => {
   return (
     <>
       <form action="" onSubmit={registerFormik.handleSubmit}>
-        <FormLabel htmlFor="email">Введите почту:</FormLabel>
+        <FormLabel htmlFor="email">{t('enterEmail')}</FormLabel>
         <TextField
           id="email"
           type="email"
           name="email"
-          placeholder="Почта"
+          placeholder={t('email')}
           sx={{
             marginBottom: "25px",
             marginTop: "5px",
@@ -85,12 +87,12 @@ const RegisterForm = observer(() => {
           }
         />
 
-        <FormLabel htmlFor="password">Введите пароль:</FormLabel>
+        <FormLabel htmlFor="password">{t('enterPassword')}</FormLabel>
         <TextField
           id="password"
           type="password"
           name="password"
-          placeholder="Пароль"
+          placeholder={t('password')}
           fullWidth
           sx={{
             marginBottom: "10px",
@@ -109,7 +111,7 @@ const RegisterForm = observer(() => {
         <TextField
           type="password"
           name="confirmationPassword"
-          placeholder="Подтверждение пароля"
+          placeholder={t('confirmPassword')}
           fullWidth
           value={registerFormik.values.confirmationPassword}
           onChange={registerFormik.handleChange}
@@ -131,7 +133,7 @@ const RegisterForm = observer(() => {
           loading={isLoading}
           type="submit"
         >
-          Продолжить
+          {t('continue')}
         </LoadingButton>
       </form>
       <Link
@@ -142,7 +144,7 @@ const RegisterForm = observer(() => {
         }}
         onClick={() => navigate("/auth")}
       >
-        Есть Аккаунт? Войти.
+        {t('haveAccount')}
       </Link>
     </>
   );

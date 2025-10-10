@@ -7,6 +7,7 @@ import { Playlist, Song } from "../../types";
 import SearchIcon from "@mui/icons-material/Search";
 import songsStore from "../../stores/songs-store";
 import { observer } from "mobx-react-lite";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 interface SearchWindowProps {
     setIsSearchOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,6 +33,8 @@ let mockPlaylist: Playlist = {
 
 const SearchWindow: React.FC<SearchWindowProps> = observer(
     ({ setIsSearchOpened }) => {
+        const { t } = useLocalization();
+        
         useEffect(() => {
             document.body.style.overflow = "hidden";
 
@@ -182,7 +185,7 @@ const SearchWindow: React.FC<SearchWindowProps> = observer(
                                     },
                                     color: "#ffffff",
                                 }}
-                                placeholder="Посик..."
+                                placeholder={t('searchPlaceholder')}
                                 autoFocus
                                 value={searchValue}
                                 onChange={(e) => {
@@ -210,7 +213,7 @@ const SearchWindow: React.FC<SearchWindowProps> = observer(
                                     setStatus(SearchStatus.CATALOG);
                                 }}
                             >
-                                Каталог
+                                {t('catalog')}
                             </Button>
                             <Button
                                 color={
@@ -224,7 +227,7 @@ const SearchWindow: React.FC<SearchWindowProps> = observer(
                                     setStatus(SearchStatus.MY_MUSIC);
                                 }}
                             >
-                                Моя музыка
+                                {t('myMusic')}
                             </Button>
                         </Stack>
                     </Stack>

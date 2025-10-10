@@ -6,28 +6,30 @@ import axios from "axios";
 import { useStores } from "../../root-store-context";
 import { useNavigate } from "react-router";
 import { observer } from "mobx-react-lite";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
-const loginValidationSchema = yup.object({
+const createLoginValidationSchema = (t: (key: any) => string) => yup.object({
   email: yup
     .string()
-    .email("Введите адрес электронной почты")
-    .required("Введите адрес электронной почты"),
+    .email(t('enterValidEmail'))
+    .required(t('enterValidEmail')),
   password: yup
     .string()
-    .min(8, "Пароль должен содержать минимум 8 символов")
-    .required("Введите пароль"),
+    .min(8, t('passwordMinLength'))
+    .required(t('enterPassword')),
 });
 
 const LoginForm = observer(() => {
   const { userStore } = useStores();
   const navigate = useNavigate();
+  const { t } = useLocalization();
 
   const loginFormik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
-    validationSchema: loginValidationSchema,
+    validationSchema: createLoginValidationSchema(t),
     // validateOnChange: false,
     // validateOnBlur: false,
     onSubmit: async (values, { setErrors }) => {
@@ -43,7 +45,7 @@ const LoginForm = observer(() => {
         navigate("/radio");
       } catch (error) {
         setErrors({
-          password: "Неверные данные для входа!",
+          password: t('wrongCredentials'),
         });
       }
     },
@@ -52,9 +54,9 @@ const LoginForm = observer(() => {
   return (
     <>
       <form action="" onSubmit={loginFormik.handleSubmit}>
-        <FormLabel htmlFor="email">Введите почту:</FormLabel>
+        <FormLabel htmlFor="email">{t('enterEmail')}</FormLabel>
         <TextField
-          placeholder="Почта"
+          placeholder={t('email')}
           id="email"
           name="email"
           type="email"
@@ -70,9 +72,9 @@ const LoginForm = observer(() => {
           helperText={loginFormik.touched.email && loginFormik.errors.email}
         />
 
-        <FormLabel htmlFor="password">Введите пароль:</FormLabel>
+        <FormLabel htmlFor="password">{t('enterPassword')}</FormLabel>
         <TextField
-          placeholder="Пароль"
+          placeholder={t('password')}
           id="password"
           name="password"
           type="password"
@@ -95,7 +97,7 @@ const LoginForm = observer(() => {
           }}
           onClick={() => navigate("/auth/password/recover")}
         >
-          Забыли пароль?
+          {t('forgotPassword')}
         </Link>
 
         <br />
@@ -107,7 +109,7 @@ const LoginForm = observer(() => {
           type="submit"
           variant="contained"
         >
-          Отправить
+          {t('submit')}
         </Button>
       </form>
       <Link
@@ -118,7 +120,7 @@ const LoginForm = observer(() => {
         }}
         onClick={() => navigate("/auth/register")}
       >
-        Регистрация
+        {t('registration')}
       </Link>
     </>
   );

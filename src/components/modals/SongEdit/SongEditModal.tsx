@@ -10,6 +10,7 @@ import { useFormik } from "formik";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 import { useQueryClient } from "react-query";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
 export interface UpdateSongInfoProps {
     name: string;
@@ -19,6 +20,7 @@ export interface UpdateSongInfoProps {
 
 const SongEditModal = observer(() => {
     const { modalsStore } = useStores();
+    const { t } = useLocalization();
 
     const song = modalsStore.songToEdit;
     const [isLoading, setIsLoading] = useState(false);
@@ -200,7 +202,7 @@ const SongEditModal = observer(() => {
                                         }}
                                         name="name"
                                         variant="standard"
-                                        placeholder="Название аудио"
+                                        placeholder={t('audioTitle')}
                                         value={songUpdateFormik.values.name}
                                         onChange={songUpdateFormik.handleChange}
                                     />
@@ -224,7 +226,7 @@ const SongEditModal = observer(() => {
                                         color="primary"
                                         type="submit"
                                     >
-                                        Сохранить
+                                        {t('save')}
                                     </LoadingButton>
                                 </Box>
                             </Stack>

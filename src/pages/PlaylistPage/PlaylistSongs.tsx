@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import PlaylistQueries from "../../queries/playlists";
 import { useStores } from "../../root-store-context";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 interface PlaylistSongsProps {
     data: Song[];
@@ -129,6 +130,7 @@ const SongList = observer(({ data, playlist, isEdit }: SongListProps) => {
 
 const PlaylistSongs = observer(
     ({ data, isLoading, isEdit, playlist, isSongPage }: PlaylistSongsProps) => {
+        const { t } = useLocalization();
         return (
             <Stack
                 sx={{
@@ -163,7 +165,7 @@ const PlaylistSongs = observer(
                         ) : data?.length > 0 ? (
                             <>
                                 <Grid item xs={12} md={6}>
-                                    Название
+                                    {t('title')}
                                 </Grid>
                                 {!playlist?.is_album && (
                                     <Grid
@@ -171,7 +173,7 @@ const PlaylistSongs = observer(
                                         md="auto"
                                         display={{ xs: "none", md: "block" }}
                                     >
-                                        Альбом
+                                        {t('album')}
                                     </Grid>
                                 )}
                             </>

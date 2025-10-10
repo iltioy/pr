@@ -5,8 +5,10 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { CAHRT_GLOBAL_TRENDS_NAME } from "../../../constants/admin";
 import { Chart } from "../../../types";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
 const Trends = observer(() => {
+    const { t } = useLocalization();
     const { data: chart } = useQuery(
         CAHRT_GLOBAL_TRENDS_NAME,
         () => axios.get(`/chart/${CAHRT_GLOBAL_TRENDS_NAME}`),
@@ -32,10 +34,10 @@ const Trends = observer(() => {
                 flexDirection="column"
             >
                 <Typography variant="h4" marginTop="30px" marginBottom="5px">
-                    Чарт
+                    {t('chart')}
                 </Typography>
                 <Typography variant="body1" color="#cccccc" marginBottom="30px">
-                    Треки, популярные прямо сейчас
+                    {t('popularTracksNow')}
                 </Typography>
 
                 <Stack flexDirection="column" width="100%">

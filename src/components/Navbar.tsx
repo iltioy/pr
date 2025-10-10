@@ -14,6 +14,8 @@ import SearchWindow from "./modals/SearchWindow";
 import { useNavigate } from "react-router";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../root-store-context";
+import { useLocalization } from "../contexts/LocalizationContext";
+import { Language } from "../translations";
 
 interface NavbarProps {
     topRef?: React.MutableRefObject<HTMLSpanElement | null>;
@@ -23,7 +25,7 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
     const theme = useTheme();
     const location = useLocation();
     const navigate = useNavigate();
-
+    const { t, language, setLanguage } = useLocalization();
     let themeColor = theme.palette.mode === "dark" ? "white" : "black";
 
     const [isInputFocused, setIsInputFocused] = useState(false);
@@ -33,6 +35,11 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
 
     const ref = useRef<HTMLDivElement | null>(null);
     const { userStore, modalsStore } = useStores();
+
+    const handleLogout = () => {
+        userStore.logout();
+        navigate("/auth");
+    };
 
     if (location.pathname.startsWith("/auth")) {
         return <></>;
@@ -76,7 +83,7 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                             navigate("/radio");
                         }}
                     >
-                        Твоя Музыка
+                        {t('appName')}
                     </Typography>
                     <Stack
                         flexDirection="row"
@@ -97,7 +104,7 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                                 navigate("/radio");
                             }}
                         >
-                            Радио
+                            {t('radio')}
                         </Button>
                         {/* 
             <Button color="inherit" sx={{ marginRight: "5px" }}>
@@ -112,7 +119,7 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                                 )
                             }
                         >
-                            Коллекция
+                            {t('collection')}
                         </Button>
 
                         {(userStore.user.role === "artist" ||
@@ -126,7 +133,7 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                                         )
                                     }
                                 >
-                                    Страница артиста
+                                    {t('artistPage')}
                                 </Button>
                             </>
                         )}
@@ -136,9 +143,23 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                                 color="inherit"
                                 onClick={() => navigate(`/admin`)}
                             >
-                                Админка
+                                {t('admin')}
                             </Button>
                         )}
+
+                        <Button
+                            color="inherit"
+                            onClick={() => setLanguage(language === Language.ru ? Language.en : Language.ru)}
+                        >
+                            {language === Language.ru ? 'EN' : 'RU'}
+                        </Button>
+
+                        <Button
+                            color="inherit"
+                            onClick={handleLogout}
+                        >
+                            {t('logout')}
+                        </Button>
                     </Stack>
 
                     <Stack
@@ -174,7 +195,7 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
                                 },
                                 color: isSearchOpened ? "#ffffff" : themeColor,
                             }}
-                            placeholder="Посик..."
+                            placeholder={t('search')}
                             onFocus={() => {
                                 ref?.current?.scrollIntoView();
                                 setIsInputFocused(true);

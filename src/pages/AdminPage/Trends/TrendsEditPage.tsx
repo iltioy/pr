@@ -18,6 +18,7 @@ import {
 import styled from "@emotion/styled";
 import ChartQueries from "../../../queries/charts";
 import { CAHRT_GLOBAL_TRENDS_NAME } from "../../../constants/admin";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 import SongItem from "../../../components/admin/SongItem";
 import { useStores } from "../../../root-store-context";
 import SongRecord from "../../../components/SongRecord";
@@ -31,6 +32,7 @@ const TrendsEditPage = observer(() => {
     const [playlist, setPlaylist] = useState<Playlist>();
     const [songs, setSongs] = useState<Song[]>([]);
     const [currentSongId, setCurrentSongId] = useState("");
+    const { t } = useLocalization();
 
     const { modalsStore } = useStores();
 
@@ -113,7 +115,7 @@ const TrendsEditPage = observer(() => {
     return (
         <Stack>
             <AdminPageHeader
-                title="Чарты: Популярные песни"
+                title={t('chartsPopularSongs')}
                 defaultValue={CAHRT_GLOBAL_TRENDS_NAME}
             />
             <Stack
@@ -191,7 +193,7 @@ const TrendsEditPage = observer(() => {
                 </Stack>
             </Stack>
             <Box>
-                <Button onClick={() => navigate("/radio")}>На главную</Button>
+                <Button onClick={() => navigate("/radio")}>{t('goHome')}</Button>
             </Box>
         </Stack>
     );

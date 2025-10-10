@@ -11,6 +11,7 @@ import { useStores } from "../../root-store-context";
 import PlaylistQueries from "../../queries/playlists";
 import useCopy from "../../hooks/useCopy";
 import { FRONTEND_URL } from "../../config";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 interface PlaylistItemIconsProps {
     playlist: Playlist;
@@ -36,7 +37,7 @@ const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(
         };
 
         const { copy } = useCopy(
-            `${FRONTEND_URL}/${playlist?.owner.username}/playlist/${playlist?.id}`
+            `${FRONTEND_URL}/${playlist?.owner?.username}/playlist/${playlist?.id}`
         );
 
         return (
@@ -161,6 +162,7 @@ interface PlaylisyItemProps {
 
 const PlaylistItem: React.FC<PlaylisyItemProps> = observer(({ playlist }) => {
     const navigate = useNavigate();
+    const { t } = useLocalization();
 
     return (
         <Stack
@@ -179,7 +181,7 @@ const PlaylistItem: React.FC<PlaylisyItemProps> = observer(({ playlist }) => {
             }}
             color="text.primary"
             onClick={() => {
-                navigate(`/${playlist.owner.username}/playlist/${playlist.id}`);
+                navigate(`/${playlist?.owner?.username}/playlist/${playlist.id}`);
             }}
         >
             <Stack
@@ -255,9 +257,9 @@ const PlaylistItem: React.FC<PlaylisyItemProps> = observer(({ playlist }) => {
                         {playlist.owner.nickname}
                         {/* • */}
                         {(playlist.is_album && playlist.songs.length) === 1 &&
-                            "Сингл"}
+                            t('single')}
                         {(playlist.is_album && playlist.songs.length) > 1 &&
-                            `${playlist.songs.length} треков`}
+                            `${playlist.songs.length} ${t('tracks')}`}
                     </Typography>
                 )}
             </Stack>

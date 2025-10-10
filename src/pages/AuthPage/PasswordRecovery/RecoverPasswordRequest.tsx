@@ -13,24 +13,26 @@ import { useState } from "react";
 import axios from "axios";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
-const passwordRecoveryValidationSchema = yup.object({
+const createPasswordRecoveryValidationSchema = (t: (key: any) => string) => yup.object({
   email: yup
     .string()
-    .email("Введите адрес электронной почты")
-    .required("Введите адрес электронной почты"),
+    .email(t('enterValidEmail'))
+    .required(t('enterValidEmail')),
 });
 
 const RecoverPasswordRequest = observer(() => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSend, setIsSend] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLocalization();
 
   const passwordRecoveryRequestFormik = useFormik({
     initialValues: {
       email: "",
     },
-    validationSchema: passwordRecoveryValidationSchema,
+    validationSchema: createPasswordRecoveryValidationSchema(t),
     onSubmit: async (values, { setErrors }) => {
       setIsLoading(true);
       try {
@@ -45,7 +47,7 @@ const RecoverPasswordRequest = observer(() => {
         setIsLoading(false);
         if (error?.response?.status === 404) {
           setErrors({
-            email: "Аккаунт с такой почтой не найден!",
+            email: t('accountNotFound'),
           });
         }
         console.log(error);
@@ -63,18 +65,18 @@ const RecoverPasswordRequest = observer(() => {
               marginBottom: "15px",
             }}
           >
-            Восстановление пароля
+            {t('passwordRecovery')}
           </Typography>
 
           {isSend ? (
             <>
               <Typography variant="body1" marginBottom="10px">
-                Ссылка для восстановления пароля была отправлена на вашу почту!
+                {t('passwordRecoverySent')}
                 ({passwordRecoveryRequestFormik.values.email})
               </Typography>
               <Box>
                 <Button variant="contained" onClick={() => navigate("/auth")}>
-                  Назад
+                  {t('back')}
                 </Button>
               </Box>
             </>
@@ -86,7 +88,7 @@ const RecoverPasswordRequest = observer(() => {
                   marginBottom: "3px",
                 }}
               >
-                Ваша почта:
+                {t('yourEmail')}
               </FormLabel>
               <TextField
                 id="email"
@@ -112,7 +114,7 @@ const RecoverPasswordRequest = observer(() => {
                   variant="contained"
                   type="submit"
                 >
-                  Восстановить
+                  {t('recover')}
                 </LoadingButton>
               </Box>
             </>

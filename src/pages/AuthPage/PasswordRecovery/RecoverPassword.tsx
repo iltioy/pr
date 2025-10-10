@@ -13,22 +13,24 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { LoadingButton } from "@mui/lab";
 import axios from "axios";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
-const registerValidationSchema = yup.object({
+const createRegisterValidationSchema = (t: (key: any) => string) => yup.object({
   password: yup
     .string()
-    .min(8, "Пароль должен содержать минимум 8 символов")
-    .required("Введите пароль"),
+    .min(8, t('passwordMinLength'))
+    .required(t('enterPassword')),
   confirmationPassword: yup
     .string()
-    .oneOf([yup.ref("password")], "Пароли должны совпадать")
-    .required("Введите пароль ещё раз"),
+    .oneOf([yup.ref("password")], t('passwordsMustMatch'))
+    .required(t('enterPasswordAgain')),
 });
 
 const RecoverPassword = () => {
   const { recoveryId } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useLocalization();
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -38,7 +40,7 @@ const RecoverPassword = () => {
       password: "",
       confirmationPassword: "",
     },
-    validationSchema: registerValidationSchema,
+    validationSchema: createRegisterValidationSchema(t),
     onSubmit: async (values, { setErrors }) => {
       try {
         setIsLoading(true);
@@ -58,7 +60,7 @@ const RecoverPassword = () => {
   if (isSuccess) {
     return (
       <Stack color="text.primary">
-        <Typography variant="h5">Успех!</Typography>
+        <Typography variant="h5">{t('success')}</Typography>
         <Typography
           variant="body1"
           sx={{
@@ -66,12 +68,12 @@ const RecoverPassword = () => {
             marginBottom: "10px",
           }}
         >
-          Пароль был успешно изменён.
+          {t('passwordChanged')}
         </Typography>
 
         <Box>
           <Button variant="contained" onClick={() => navigate("/auth")}>
-            Войти в аккаунт
+            {t('signIn')}
           </Button>
         </Box>
       </Stack>
@@ -81,7 +83,7 @@ const RecoverPassword = () => {
   if (isError) {
     return (
       <Stack color="text.primary">
-        <Typography variant="h5">Упс!</Typography>
+        <Typography variant="h5">{t('oops')}</Typography>
         <Typography
           variant="body1"
           sx={{
@@ -89,13 +91,12 @@ const RecoverPassword = () => {
             marginBottom: "10px",
           }}
         >
-          Не удалось сменить пароль. <br /> Возможно, ссылка для смены пароля
-          истекла, попробуйте заного.
+          {t('passwordChangeFailed')}
         </Typography>
 
         <Box>
           <Button variant="contained" onClick={() => navigate("/auth")}>
-            Назад
+            {t('back')}
           </Button>
         </Box>
       </Stack>
@@ -107,10 +108,10 @@ const RecoverPassword = () => {
       <form action="" onSubmit={recoverPasswordFormik.handleSubmit}>
         <Stack color="text.primary">
           <Typography variant="h5" marginBottom="10px">
-            Восстановление пароля
+            {t('passwordRecovery')}
           </Typography>
 
-          <FormLabel htmlFor="password">Введите новый пароль:</FormLabel>
+          <FormLabel htmlFor="password">{t('enterNewPassword')}</FormLabel>
           <TextField
             id="password"
             type="password"
@@ -134,7 +135,7 @@ const RecoverPassword = () => {
           />
 
           <FormLabel htmlFor="confirmationPassword">
-            Подтверждение пароля:
+            {t('confirmPasswordLabel')}
           </FormLabel>
           <TextField
             type="password"
@@ -164,7 +165,7 @@ const RecoverPassword = () => {
               type="submit"
               variant="contained"
             >
-              Сохранить
+              {t('save')}
             </LoadingButton>
           </Box>
         </Stack>

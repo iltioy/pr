@@ -16,6 +16,7 @@ import { useStores } from "../../../root-store-context";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import CloseIcon from "@mui/icons-material/Close";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
 interface MultipleSongUploadFormProps {
     filesInfo: FileInfo[];
@@ -30,6 +31,7 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
     ({ filesInfo, handleEditFileFromMany, setFilesInfo }) => {
         const { modalsStore } = useStores();
         const [isLoading, setIsLoading] = useState(false);
+        const { t } = useLocalization();
 
         const handleUploadAllSongs = async () => {
             setIsLoading(true);
@@ -41,9 +43,9 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
                             const { image_url, name } = fileInfo;
                             let audioAuthor =
                                 modalsStore.playlistToAddTo?.owner.nickname ||
-                                "Администратор";
+                                t('administrator');
                             let album =
-                                modalsStore.playlistToAddTo?.name || "Альбом";
+                                modalsStore.playlistToAddTo?.name || t('album');
                             if (!name) throw new Error("No name");
 
                             setFilesInfo((prevState) => {
@@ -265,7 +267,7 @@ const MultipleSongUploadForm: React.FC<MultipleSongUploadFormProps> = observer(
                             color="primary"
                             onClick={() => handleUploadAllSongs()}
                         >
-                            Сохранить
+                            {t('save')}
                         </LoadingButton>
                     </Box>
                 </Stack>

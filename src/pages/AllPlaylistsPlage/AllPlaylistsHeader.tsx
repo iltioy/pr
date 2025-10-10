@@ -9,6 +9,7 @@ import FilesQueries from "../../queries/files";
 import UserQueries from "../../queries/users";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 interface AllPlaylistsHeaderProps {
     username?: string | null;
@@ -24,6 +25,7 @@ const AllPlaylistsHeader: React.FC<AllPlaylistsHeaderProps> = observer(
         const { songsStore, playlistsStore, userStore } = useStores();
         const [isEditingUsername, setIsEditingUsername] = useState(false);
         const queryClient = useQueryClient();
+        const { t } = useLocalization();
 
         const handleUpdateProfilePicture = async (file: File) => {
             const imageUrl = await FilesQueries.handleUploadImage(file);
@@ -122,7 +124,7 @@ const AllPlaylistsHeader: React.FC<AllPlaylistsHeaderProps> = observer(
                                     },
                                 }}
                             >
-                                Коллекция
+                                {t('collection')}
                             </Typography>
                             {!isEditingUsername ? (
                                 <Typography
@@ -208,7 +210,7 @@ const AllPlaylistsHeader: React.FC<AllPlaylistsHeaderProps> = observer(
                                 }}
                             >
                                 <PressableButton
-                                    text="Перемешать"
+                                    text={t('shuffle')}
                                     icon="play"
                                 />
                             </Box>

@@ -18,6 +18,7 @@ import { useFormik } from "formik";
 import PlaylistQueries from "../../../queries/playlists";
 import path from "path-browserify";
 import { FileInfo, newFileInfo } from "./SongUploadModal";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 import { useSnackbar } from "notistack";
 
 const DEFAULT_MUSIC_IMAGE_URL =
@@ -43,6 +44,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
         );
         const [isLoading, setIsLoading] = useState(false);
         const { modalsStore } = useStores();
+        const { t } = useLocalization();
 
         const { enqueueSnackbar } = useSnackbar();
 
@@ -53,7 +55,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                     name: info.name,
                     author:
                         modalsStore.playlistToAddTo?.owner.nickname ||
-                        "Администратор",
+                        t('administrator'),
                     album: modalsStore.playlistToAddTo?.name,
                     image_url: songImage,
                 };
@@ -223,7 +225,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                                         }}
                                         name="name"
                                         variant="standard"
-                                        placeholder="Название аудио"
+                                        placeholder={t('audioTitle')}
                                         value={songCreateFormik.values.name}
                                         onChange={songCreateFormik.handleChange}
                                     />

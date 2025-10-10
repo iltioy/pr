@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { Playlist } from "../../../types";
 import { useNavigate, useParams } from "react-router";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 import {
     useDeleteCategory,
     useUpdateCategory,
@@ -30,6 +31,7 @@ const EditCategory = observer(() => {
     const [name, setName] = useState("");
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
     const [currentPlaylistId, setCurrentPlaylistId] = useState("");
+    const { t } = useLocalization();
 
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
@@ -60,7 +62,7 @@ const EditCategory = observer(() => {
             await CategoryQueries.addPlaylistToCategory(id, currentPlaylistId);
             queryClient.invalidateQueries(["categories", id]);
         } catch (error) {
-            enqueueSnackbar("Не удалось добавить плейлист", {
+            enqueueSnackbar(t('failedToAddPlaylist'), {
                 variant: "error",
                 autoHideDuration: 3000,
             });
@@ -73,7 +75,7 @@ const EditCategory = observer(() => {
             await CategoryQueries.removePlaylistFromCategory(id, playlistId);
             queryClient.invalidateQueries(["categories", id]);
         } catch (error) {
-            enqueueSnackbar("Не удалось удалить плейлист", {
+            enqueueSnackbar(t('failedToDeletePlaylist'), {
                 variant: "error",
                 autoHideDuration: 3000,
             });
@@ -99,7 +101,7 @@ const EditCategory = observer(() => {
                         }}
                         htmlFor="categoryName"
                     >
-                        Название:
+                        {t('categoryName')}
                     </FormLabel>
                     <Box>
                         <TextField
@@ -190,12 +192,12 @@ const EditCategory = observer(() => {
             </Stack>
 
             <ConfirmationModal
-                cancelText="Отменить"
+                cancelText={t('cancel')}
                 confirmationAction={() => {
                     deleteCategory();
                     setIsModalOpen(false);
                 }}
-                confirmationText="Удалить"
+                confirmationText={t('delete')}
                 open={isModalOpen}
                 setOpen={setIsModalOpen}
                 modalText="Удалить эту категорию?"

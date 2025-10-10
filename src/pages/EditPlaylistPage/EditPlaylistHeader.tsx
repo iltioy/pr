@@ -15,6 +15,7 @@ import PlaylistImage from "../../components/playlist/PlaylistImage";
 import axios from "axios";
 import { useStores } from "../../root-store-context";
 import FilesQueries from "../../queries/files";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 interface EditPlaylistHeaderProps {
     playlist?: Playlist;
@@ -40,6 +41,7 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
         handleSaveChanges,
     }) => {
         const theme = useTheme();
+        const { t } = useLocalization();
         const [isEditingPlaylistName, setIsEditingPlaylistName] =
             useState(false);
 
@@ -244,7 +246,7 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
                             >
                                 {/* <PressableButton text="Сохранить" /> */}
                                 <Button variant="contained" color="secondary">
-                                    Сохранить
+                                    {t('save')}
                                 </Button>
                             </Box>
                         </Stack>

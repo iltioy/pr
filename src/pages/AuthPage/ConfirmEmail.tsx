@@ -7,10 +7,12 @@ import { useNavigate } from "react-router";
 import OTPInput from "react-otp-input";
 import { useStores } from "../../root-store-context";
 import { observer } from "mobx-react-lite";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 const ConfirmEmail = observer(() => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useLocalization();
 
   const theme = useTheme();
   const navigate = useNavigate();
@@ -96,7 +98,7 @@ const ConfirmEmail = observer(() => {
         }}
         color="text.primary"
       >
-        Не пришло письмо? <br />{" "}
+        {t('emailNotReceived')} <br />{" "}
         <Link
           variant="body2"
           sx={{ cursor: "pointer" }}

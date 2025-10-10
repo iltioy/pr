@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import songsStore from "../stores/songs-store";
+import { useLocalization } from "../contexts/LocalizationContext";
 
 interface SettingsDrawerProps {
     isSettingsDrawerOpen: boolean;
@@ -63,6 +64,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
         const [moods, setMoods] = useState<string[]>([]);
         const [languages, setLanguages] = useState<string[]>([]);
         const [types, setTypes] = useState<string[]>([]);
+        const { t } = useLocalization();
 
         const handleChanges = () => {
             songsStore.setSongPreferences({
@@ -97,13 +99,13 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                 marginBottom="30px"
                             >
                                 <Typography marginBottom="15px">
-                                    ПО ХАРАКТЕРУ
+                                    {t('byCharacter')}
                                 </Typography>
 
                                 <Grid container spacing={1} width="100%">
                                     <Grid item xs={12}>
                                         <OptionsItem
-                                            title="Любимое"
+                                            title={t('favorite')}
                                             setValue={setTypes}
                                             values={types}
                                             handleChanges={handleChanges}
@@ -111,7 +113,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                     </Grid>
                                     <Grid item xs={6}>
                                         <OptionsItem
-                                            title="Незнакомое"
+                                            title={t('unfamiliar')}
                                             setValue={setTypes}
                                             values={types}
                                             handleChanges={handleChanges}
@@ -119,7 +121,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                     </Grid>
                                     <Grid item xs={6}>
                                         <OptionsItem
-                                            title="Популярное"
+                                            title={t('popular')}
                                             setValue={setTypes}
                                             values={types}
                                             handleChanges={handleChanges}
@@ -135,13 +137,13 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                 marginBottom="30px"
                             >
                                 <Typography marginBottom="15px">
-                                    ПОД НАСТРОЕНИЕ
+                                    {t('underMood')}
                                 </Typography>
 
                                 <Grid container spacing={1} width="100%">
                                     <Grid item xs={6}>
                                         <OptionsItem
-                                            title="Бодрое"
+                                            title={t('cheerful')}
                                             setValue={setMoods}
                                             values={moods}
                                             handleChanges={handleChanges}
@@ -149,7 +151,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                     </Grid>
                                     <Grid item xs={6}>
                                         <OptionsItem
-                                            title="Весёлое"
+                                            title={t('happy')}
                                             setValue={setMoods}
                                             values={moods}
                                             handleChanges={handleChanges}
@@ -157,7 +159,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                     </Grid>
                                     <Grid item xs={6}>
                                         <OptionsItem
-                                            title="Спокойное"
+                                            title={t('calm')}
                                             setValue={setMoods}
                                             values={moods}
                                             handleChanges={handleChanges}
@@ -165,7 +167,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                     </Grid>
                                     <Grid item xs={6}>
                                         <OptionsItem
-                                            title="Грустное"
+                                            title={t('sad')}
                                             setValue={setMoods}
                                             values={moods}
                                             handleChanges={handleChanges}
@@ -181,13 +183,13 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                 marginBottom="30px"
                             >
                                 <Typography marginBottom="15px">
-                                    ПО ЯЗЫКУ
+                                    {t('byLanguage')}
                                 </Typography>
 
                                 <Grid container spacing={1} width="100%">
                                     <Grid item xs={12}>
                                         <OptionsItem
-                                            title="Русский"
+                                            title={t('russian')}
                                             setValue={setLanguages}
                                             values={languages}
                                             handleChanges={handleChanges}
@@ -195,7 +197,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                     </Grid>
                                     <Grid item xs={6}>
                                         <OptionsItem
-                                            title="Иностранный"
+                                            title={t('foreign')}
                                             setValue={setLanguages}
                                             values={languages}
                                             handleChanges={handleChanges}
@@ -203,7 +205,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = observer(
                                     </Grid>
                                     <Grid item xs={6}>
                                         <OptionsItem
-                                            title="Без слов"
+                                            title={t('noWords')}
                                             setValue={setLanguages}
                                             values={languages}
                                             handleChanges={handleChanges}

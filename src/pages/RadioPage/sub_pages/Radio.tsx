@@ -11,9 +11,11 @@ import { useQuery } from "react-query";
 import { Category, Chart } from "../../../types";
 import axios from "axios";
 import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../../../constants/admin";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
 const Radio = observer(() => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
+    const { t } = useLocalization();
 
     const { data: chart } = useQuery(
         "chart-global-categories",
@@ -80,7 +82,7 @@ const Radio = observer(() => {
                                         }}
                                     />
                                     <Typography variant="h4">
-                                        Моя волна
+                                        {t('myWave')}
                                     </Typography>
                                 </Stack>
 
@@ -113,7 +115,7 @@ const Radio = observer(() => {
                                             paddingRight: "4px",
                                         }}
                                     >
-                                        Настроить
+                                        {t('configure')}
                                     </Typography>
                                 </Stack>
                             </Stack>

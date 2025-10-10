@@ -18,6 +18,7 @@ import {
     CAHRT_GLOBAL_ALBUMS_NAME,
     CAHRT_GLOBAL_TRENDS_NAME,
 } from "../../../constants/admin";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 import { useStores } from "../../../root-store-context";
 import { useNavigate } from "react-router";
 import PlaylistEditItem from "./PlaylistIEdittem";
@@ -31,6 +32,7 @@ const AlbumsEditPage = observer(() => {
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
     const [currentPlaylistId, setCurrentPlaylistId] = useState("");
     const [category, setCategory] = useState<Category | null>(null);
+    const { t } = useLocalization();
 
     const { modalsStore } = useStores();
 
@@ -118,7 +120,7 @@ const AlbumsEditPage = observer(() => {
     return (
         <Stack>
             <AdminPageHeader
-                title="Чарты: Альбомы"
+                title={t('chartsAlbums')}
                 defaultValue={CAHRT_GLOBAL_ALBUMS_NAME}
             />
             <Stack
@@ -185,7 +187,7 @@ const AlbumsEditPage = observer(() => {
                 </Stack>
             </Stack>
             <Box>
-                <Button onClick={() => navigate("/radio")}>На главную</Button>
+                <Button onClick={() => navigate("/radio")}>{t('goHome')}</Button>
             </Box>
         </Stack>
     );

@@ -1,5 +1,5 @@
 import { Playlist, Song } from "../types";
-import { faker } from "@faker-js/faker";
+const { faker } = require("@faker-js/faker");
 
 export let playlist: Playlist = {
     owner: {

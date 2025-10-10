@@ -6,8 +6,10 @@ import { useQuery } from "react-query";
 import { CAHRT_GLOBAL_ALBUMS_NAME } from "../../../constants/admin";
 import { Chart } from "../../../types";
 import PlaylistsSection from "../../../components/playlist/PlaylistsSection";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
 const Albums = observer(() => {
+    const { t } = useLocalization();
     const { data: chart } = useQuery(
         CAHRT_GLOBAL_ALBUMS_NAME,
         () => axios.get(`/chart/${CAHRT_GLOBAL_ALBUMS_NAME}`),
@@ -35,7 +37,7 @@ const Albums = observer(() => {
                 <Stack flexDirection="column" width="100%" marginTop="30px">
                     {chart?.categories[0] && (
                         <PlaylistsSection
-                            title="Альбомы, которые слушают"
+                            title={t('albumsBeingListened')}
                             playlists={chart.categories[0].playlists}
                             isAlbum
                         />

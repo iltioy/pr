@@ -15,6 +15,7 @@ import {
     CAHRT_GLOBAL_CATEGORIES_NAME,
     CAHRT_GLOBAL_TRENDS_NAME,
 } from "../../constants/admin";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 interface AdminPageSelectProps {
     title: string;
@@ -25,6 +26,7 @@ const AdminPageHeader = observer(
     ({ title, defaultValue }: AdminPageSelectProps) => {
         const navigate = useNavigate();
         const [value, setValue] = useState(defaultValue);
+        const { t } = useLocalization();
 
         const handleChange = (e: SelectChangeEvent<string>) => {
             if (e.target.value !== defaultValue) {
@@ -54,13 +56,13 @@ const AdminPageHeader = observer(
                             disableUnderline
                         >
                             <MenuItem value={CAHRT_GLOBAL_CATEGORIES_NAME}>
-                                Категории
+                                {t('categories')}
                             </MenuItem>
                             <MenuItem value={CAHRT_GLOBAL_TRENDS_NAME}>
-                                Тренды
+                                {t('trends')}
                             </MenuItem>
                             <MenuItem value={CAHRT_GLOBAL_ALBUMS_NAME}>
-                                Альбомы
+                                {t('albums')}
                             </MenuItem>
                         </Select>
                     </FormControl>

@@ -41,6 +41,7 @@ import SongEditModal from "./components/modals/SongEdit/SongEditModal";
 import UsersQueries from "./queries/users";
 import AddSongToPlaylistModal from "./components/modals/AddSongToPlaylist/AddSongToPlaylistModal";
 import AlbumsEditPage from "./pages/AdminPage/Albums/AlbumsEditPage";
+import { LocalizationProvider } from "./contexts/LocalizationContext";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -158,94 +159,96 @@ const App = observer(() => {
     }, []);
 
     return (
-        <Box component="div" bgcolor="custom.bg.main" className="App">
-            <ThemeProvider theme={darkTheme}>
-                {/* <span ref={topRef}></span> */}
-                {/* <Navbar topRef={topRef} /> */}
+        <LocalizationProvider>
+            <Box component="div" bgcolor="custom.bg.main" className="App">
+                <ThemeProvider theme={darkTheme}>
+                    {/* <span ref={topRef}></span> */}
+                    {/* <Navbar topRef={topRef} /> */}
 
-                <>
-                    {modalsStore.isSongUploadModalActive && <SongUploadModal />}
-                    {modalsStore.isSongUpdateModalActive && <SongEditModal />}
-                    {modalsStore.isSongAddToPlaylistModalActive && (
-                        <AddSongToPlaylistModal />
+                    <>
+                        {modalsStore.isSongUploadModalActive && <SongUploadModal />}
+                        {modalsStore.isSongUpdateModalActive && <SongEditModal />}
+                        {modalsStore.isSongAddToPlaylistModalActive && (
+                            <AddSongToPlaylistModal />
+                        )}
+                    </>
+
+                    {songsStore.current_song && userStore.access_token && (
+                        <SongTrack />
                     )}
-                </>
 
-                {songsStore.current_song && userStore.access_token && (
-                    <SongTrack />
-                )}
-
-                <Routes>
-                    <Route path="/auth" element={<AuthPage />}>
-                        <Route index element={<LoginForm />} />
-                        <Route path="register" element={<RegisterForm />} />
-                        <Route path="email/verify" element={<ConfirmEmail />} />
-                        <Route
-                            path="password/recover"
-                            element={<RecoverPasswordRequest />}
-                        />
-                        <Route
-                            path="password/recover/:recoveryId"
-                            element={<RecoverPassword />}
-                        />
-                    </Route>
-
-                    <Route element={<AuthenticatedRoutes />}>
-                        <Route
-                            path="/:username/playlist/:playlistId"
-                            element={<PlaylistPage />}
-                        />
-                        <Route
-                            path="/:username/playlist/:playlistId/edit"
-                            element={<EditPlaylistPage />}
-                        />
-                        <Route
-                            path="/:username/playlists"
-                            element={<AllPlaylistsPage />}
-                        />
-                        <Route path="/radio" element={<RadioPage />} />
-                        <Route
-                            path="/playlist/song/:songId"
-                            element={<SongPage />}
-                        />
-
-                        <Route
-                            path="/artist/:artistName"
-                            element={<ArtistPage />}
-                        />
-
-                        <Route element={<AdminRoutes />} path="/admin">
+                    <Routes>
+                        <Route path="/auth" element={<AuthPage />}>
+                            <Route index element={<LoginForm />} />
+                            <Route path="register" element={<RegisterForm />} />
+                            <Route path="email/verify" element={<ConfirmEmail />} />
                             <Route
-                                index
-                                element={
-                                    <Navigate
-                                        to={CAHRT_GLOBAL_CATEGORIES_NAME}
-                                    />
-                                }
+                                path="password/recover"
+                                element={<RecoverPasswordRequest />}
                             />
-                            <Route element={<AdminPage />}>
-                                <Route path={CAHRT_GLOBAL_CATEGORIES_NAME}>
-                                    <Route element={<CategoriesList />} index />
-                                    <Route
-                                        path=":id"
-                                        element={<EditCategory />}
-                                    />
-                                </Route>
+                            <Route
+                                path="password/recover/:recoveryId"
+                                element={<RecoverPassword />}
+                            />
+                        </Route>
 
-                                <Route path={CAHRT_GLOBAL_TRENDS_NAME}>
-                                    <Route element={<TrendsEditPage />} index />
-                                </Route>
+                        <Route element={<AuthenticatedRoutes />}>
+                            <Route
+                                path="/:username/playlist/:playlistId"
+                                element={<PlaylistPage />}
+                            />
+                            <Route
+                                path="/:username/playlist/:playlistId/edit"
+                                element={<EditPlaylistPage />}
+                            />
+                            <Route
+                                path="/:username/playlists"
+                                element={<AllPlaylistsPage />}
+                            />
+                            <Route path="/radio" element={<RadioPage />} />
+                            <Route
+                                path="/playlist/song/:songId"
+                                element={<SongPage />}
+                            />
 
-                                <Route path={CAHRT_GLOBAL_ALBUMS_NAME}>
-                                    <Route element={<AlbumsEditPage />} index />
+                            <Route
+                                path="/artist/:artistName"
+                                element={<ArtistPage />}
+                            />
+
+                            <Route element={<AdminRoutes />} path="/admin">
+                                <Route
+                                    index
+                                    element={
+                                        <Navigate
+                                            to={CAHRT_GLOBAL_CATEGORIES_NAME}
+                                        />
+                                    }
+                                />
+                                <Route element={<AdminPage />}>
+                                    <Route path={CAHRT_GLOBAL_CATEGORIES_NAME}>
+                                        <Route element={<CategoriesList />} index />
+                                        <Route
+                                            path=":id"
+                                            element={<EditCategory />}
+                                        />
+                                    </Route>
+
+                                    <Route path={CAHRT_GLOBAL_TRENDS_NAME}>
+                                        <Route element={<TrendsEditPage />} index />
+                                    </Route>
+
+                                    <Route path={CAHRT_GLOBAL_ALBUMS_NAME}>
+                                        <Route element={<AlbumsEditPage />} index />
+                                    </Route>
                                 </Route>
                             </Route>
                         </Route>
-                    </Route>
-                </Routes>
-            </ThemeProvider>
-            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-        </Box>
+                    </Routes>
+                </ThemeProvider>
+                <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+            </Box>
+        </LocalizationProvider>
     );
 });
 

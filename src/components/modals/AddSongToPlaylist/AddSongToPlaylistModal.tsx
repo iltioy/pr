@@ -7,6 +7,7 @@ import { useSnackbar } from "notistack";
 import axios from "axios";
 import PlaylistAddItem from "./PlaylistAddItem";
 import PlaylistQueries from "../../../queries/playlists";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
 export interface UpdateSongInfoProps {
     name: string;
@@ -18,6 +19,7 @@ export interface UpdateSongInfoProps {
 
 const AddSongToPlaylistModal = observer(() => {
     const { modalsStore, userStore } = useStores();
+    const { t } = useLocalization();
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
     useEffect(() => {
@@ -66,12 +68,12 @@ const AddSongToPlaylistModal = observer(() => {
         );
 
         if (res) {
-            enqueueSnackbar("Трек добавлен в плейлист", {
+            enqueueSnackbar(t('trackAddedToPlaylist'), {
                 variant: "success",
                 autoHideDuration: 3000,
             });
         } else {
-            enqueueSnackbar("Не удалось добавить трек в плейлист", {
+            enqueueSnackbar(t('failedToAddTrack'), {
                 variant: "error",
                 autoHideDuration: 3000,
             });

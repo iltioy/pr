@@ -5,6 +5,7 @@ import Radio from "./sub_pages/Radio";
 import Trends from "./sub_pages/Trends";
 import Navbar from "../../components/Navbar";
 import Albums from "./sub_pages/Albums";
+import { useLocalization } from "../../contexts/LocalizationContext";
 
 enum RadioSubPages {
     ALL = "ВСЁ",
@@ -12,22 +13,23 @@ enum RadioSubPages {
     TRENDS = "В ТРЕНДЕ",
 }
 
-const navItems = [
+const createNavItems = (t: (key: any) => string) => [
     {
-        label: "Всё",
+        label: t('all'),
         enum: RadioSubPages.ALL,
     },
     {
-        label: "Альбомы",
+        label: t('albums'),
         enum: RadioSubPages.NEW,
     },
     {
-        label: "В тренде",
+        label: t('trending'),
         enum: RadioSubPages.TRENDS,
     },
 ];
 
 const RadioPage = () => {
+    const { t } = useLocalization();
     const [currentSubPage, setCurrentSubPage] = useState<string>(
         RadioSubPages.ALL
     );
@@ -44,8 +46,8 @@ const RadioPage = () => {
         >
             <Navbar />
             <RadioHeader
-                header="Главное"
-                navItems={navItems}
+                header={t('main')}
+                navItems={createNavItems(t)}
                 currentNavItem={currentSubPage}
                 setNavItem={setCurrentSubPage}
             />

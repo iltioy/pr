@@ -17,6 +17,7 @@ import styled from "@emotion/styled";
 import ChartQueries from "../../../queries/charts";
 import { CAHRT_GLOBAL_CATEGORIES_NAME } from "../../../constants/admin";
 import { useNavigate } from "react-router";
+import { useLocalization } from "../../../contexts/LocalizationContext";
 
 const Wrapper = styled.div`
     margin-bottom: 5px;
@@ -25,6 +26,7 @@ const Wrapper = styled.div`
 const CategoriesList = observer(() => {
     const [categories, setCategories] = useState<Category[]>([]);
     const navigate = useNavigate();
+    const { t } = useLocalization();
 
     useQuery(
         CAHRT_GLOBAL_CATEGORIES_NAME,
@@ -86,7 +88,7 @@ const CategoriesList = observer(() => {
     return (
         <Stack>
             <AdminPageHeader
-                title="Чарты: Категории"
+                title={t('chartsCategories')}
                 defaultValue={CAHRT_GLOBAL_CATEGORIES_NAME}
             />
 
@@ -149,7 +151,7 @@ const CategoriesList = observer(() => {
                 </Stack>
             </Stack>
             <Box>
-                <Button onClick={() => navigate("/radio")}>На главную</Button>
+                <Button onClick={() => navigate("/radio")}>{t('goHome')}</Button>
             </Box>
         </Stack>
     );
